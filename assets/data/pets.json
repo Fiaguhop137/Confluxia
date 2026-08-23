@@ -53,7 +53,7 @@
         "rarity": "common",
         "buffed_stat": 3,
         "move": "splinter",
-        "description": "A shy driad that leaves a trail of fresh green shoots."
+        "description": "A shy dryad that leaves a trail of fresh green shoots."
     },
     "vinelash": {
         "name": "Vinelash",
@@ -61,7 +61,7 @@
         "rarity": "uncommon",
         "buffed_stat": 2,
         "move": "vine_whip",
-        "description": "A entity only seen with the trail of foliage that follows it's every step."
+        "description": "An entity only seen with the trail of foliage that follows its every step."
     },
     "verdantail": {
         "name": "Verdantail",
@@ -69,10 +69,10 @@
         "rarity": "rare",
         "buffed_stat": 0,
         "move": "leaf_storm",
-        "description": "An ancient equinne guardian whose flowing mane is a whirling canopy of leaves."
+        "description": "An ancient equine guardian whose flowing mane is a whirling canopy of leaves."
     },
-    "pebbit": {
-        "name": "Pebbit",
+    "pebblit": {
+        "name": "Pebblit",
         "type": "earth",
         "rarity": "common",
         "buffed_stat": 3,
@@ -123,7 +123,7 @@
         "name": "Glimmerflap",
         "type": "light",
         "rarity": "common",
-        "buffed_stat": 3,
+        "buffed_stat": 0,
         "move": "light_beam",
         "description": "A curious chick that shines brightest when someone needs guidance."
     },
@@ -173,7 +173,7 @@
         "rarity": "rare",
         "buffed_stat": 3,
         "move": "nightmare",
-        "description": "A velvet-furred leopard whose shed furs has been said to cure insomnia."
+        "description": "A velvet-furred leopard whose shed furs have been said to cure insomnia."
     },
     "umbrael": {
         "name": "Umbrael",
@@ -197,9 +197,9 @@
         "rarity": "uncommon",
         "buffed_stat": 3,
         "move": "gravity_well",
-        "description": "A floating pure black orb orbited by pebbles pulled from distant worlds."
+        "description": "A floating, pure black orb surrounded by floating pebbles pulled from distant worlds."
     },
-    "parsecwyrm": {
+    "parsecf": {
         "name": "Parsecwyrm",
         "type": "space",
         "rarity": "rare",

@@ -26,16 +26,22 @@ struct move {
     string type;
     string level;
 };
-unordered_map<string,move>moves;
-unordered_map<string,string>power_definitions;
-void load_jsons() {
-    std::ifstream moves_file("assets/data/moves.json");
-    json moves_data=json::parse(moves_file);
-    for (const auto& [id,value]:moves_data.items()){moves[id]={value["name"],value["damage"],value["cooldown"],value["type"],value["level"]};}
-    std::ifstream power_definitions_file("assets/data/power_definitions.json");
-    json power_definitions_data=json::parse(power_definitions_file);
-    for (const auto& [id,value]:power_definitions_data.items()){power_definitions[id]=value;}
+unordered_map<string,move> load_moves() {
+    unordered_map<string,move>result;
+    std::ifstream file("assets/data/moves.json");
+    json data=json::parse(file);
+    for (const auto& [id,value]:data.items()){result[id]={value["name"],value["damage"],value["cooldown"],value["type"],value["level"]};}
+    return(result);
 }
+unordered_map<string,string> load_lore() {
+    unordered_map<string,string>result;
+    std::ifstream file("assets/data/lore.json");
+    json data=json::parse(file);
+    for (const auto& [id,value]:data.items()){result[id]=value;}
+    return(result);
+}
+const unordered_map<string,move>moves=load_moves();
+const unordered_map<string,string>lore_defs=load_lore();
 string user_input(string prompt,vector<string>valid_options={}) {
     while(true){
         string response;
@@ -139,39 +145,39 @@ string get_lore(const player&player){
     string cosmic_power_upper=player.powers.cosmic;
     cosmic_power_upper[0]=std::toupper(cosmic_power_upper[0]);
     if(player.rare_traits==0){
-        lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+power_definitions.at(player.powers.basic)+" \n";
-        lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+power_definitions.at(player.powers.alignment)+" \n";
-        lore+="You have the power of "+player.powers.cosmic+". "+cosmic_power_upper+" is "+power_definitions.at(player.powers.cosmic)+" ";
+        lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+lore_defs.at(player.powers.basic)+" \n";
+        lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+lore_defs.at(player.powers.alignment)+" \n";
+        lore+="You have the power of "+player.powers.cosmic+". "+cosmic_power_upper+" is "+lore_defs.at(player.powers.cosmic)+" ";
     }else if(player.rare_traits==1){
         if(player.powers.basic=="nexus"){
-            lore+="You are the Nexus. You are a rare convergence of every elemental force, a being born with the power to command fire, metal, wood, earth, water, and forces beyond the natural world. Legends speak of the Nexus as a chosen one destined to appear when the balance of the elements is threatened, wielding powers that no ordinary warrior could ever hope to master. You stand at the center of every elemental conflict, capable of turning the strengths of one element against the weaknesses of another. With such power comes an equally great responsibility, for the fate of the land may rest upon your choices. Whether you become its greatest protector or its greatest threat is yours to decide. \n";
-            lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+power_definitions.at(player.powers.alignment)+" \n";
-            lore+="You have the power of "+player.powers.cosmic+". "+cosmic_power_upper+" is "+power_definitions.at(player.powers.cosmic)+" ";
+            lore+="You are the Nexus. "+lore_defs.at("nexus")+"\n";
+            lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+lore_defs.at(player.powers.alignment)+" \n";
+            lore+="You have the power of "+player.powers.cosmic+". "+cosmic_power_upper+" is "+lore_defs.at(player.powers.cosmic)+" ";
         }
         else if(player.powers.alignment=="objectivity"){
-            lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+power_definitions.at(player.powers.basic)+" \n";
-            lore+="You are Objectivity. You have transcended the opposing forces of light and darkness, standing beyond the endless struggle between them. Where others see good and evil, you see only what is, and your mind is untouched by the illusions and biases that cloud the judgment of ordinary beings. Ancient legends tell of those who achieve Objectivity becoming impartial arbiters of the world, able to perceive truths hidden from even the most powerful beings. You are not bound to light, nor are you consumed by darkness. You exist between them, observing the world with perfect clarity and wielding the power to determine its fate without being swayed by either side. The world may call you a savior, a monster, or something beyond either, but your judgment alone will decide what you become. \n";
-            lore+="You have the power of "+player.powers.cosmic+". "+cosmic_power_upper+" is "+power_definitions.at(player.powers.cosmic)+" ";
+            lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+lore_defs.at(player.powers.basic)+" \n";
+            lore+="You are the Objective. "+lore_defs.at("objectivity")+"\n";
+            lore+="You have the power of "+player.powers.cosmic+". "+cosmic_power_upper+" is "+lore_defs.at(player.powers.cosmic)+" ";
     }
         else{
-            lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+power_definitions.at(player.powers.basic)+" \n";
-            lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+power_definitions.at(player.powers.alignment)+" \n";
-            lore+="You are the Axiom. You possess a power that exists beyond space, beyond time, and beyond the limits of ordinary reality. While others manipulate the laws of the universe, you possess the ability to perceive and influence the fundamental principles upon which those laws are built. Ancient scholars believed that the Axiom was not merely a being who could control reality, but a living embodiment of the truths that govern existence itself. Space bends, time yields, and the impossible becomes possible in your presence. Yet such power comes with a terrifying realization: if the laws of reality can be changed, then nothing is truly permanent. You have been given the power to rewrite the rules by which the world exists, and whether you use that power to preserve creation, reshape it, or bring about something entirely new is a choice that only you can make. ";
+            lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+lore_defs.at(player.powers.basic)+" \n";
+            lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+lore_defs.at(player.powers.alignment)+" \n";
+            lore+="You are the Axiom. "+lore_defs.at("axiom");
         }
     }else if(player.rare_traits==2){
         if(player.powers.basic=="nexus"){
             if(player.powers.alignment=="objectivity"){
-                lore+="You are the Nexus of Objectivity. You command every elemental force while remaining untouched by the conflict between light and darkness. You see every element not as opposing forces, but as pieces of a greater whole, allowing you to wield them with unparalleled precision. Those who encounter you speak of a being who cannot be deceived by either side, for you understand the world without judgment and command its elements without limitation. You are not merely the master of the elements. You are the balance between them. \n";
-                lore+="You have the power of "+player.powers.cosmic+". "+cosmic_power_upper+" is "+power_definitions.at(player.powers.cosmic)+" ";
+                lore+="You are the Nexus of Objectivity. "+lore_defs.at("nexus_objectivity")+"\n";
+                lore+="You have the power of "+player.powers.cosmic+". "+cosmic_power_upper+" is "+lore_defs.at(player.powers.cosmic)+" ";
             }else{
-                lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+power_definitions.at(player.powers.alignment)+" \n";
-                lore+="You are the Nexus of Axiom. Every element answers to your will, but your power extends beyond the elements themselves. You perceive the fundamental rules that govern reality and possess the ability to bend them to your purpose. Fire, earth, water, metal, and every force between them become mere expressions of a deeper power that you alone can command. Legends once claimed that no being could master both the elements and the laws of existence, but you have proven those legends wrong. You do not merely control the world. You understand how it works. ";
+                lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+lore_defs.at(player.powers.alignment)+" \n";
+                lore+="You are the Nexus of Axiom. "+lore_defs.at("nexus_axiom");
             }
         }else{
-            lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+power_definitions.at(player.powers.basic)+" \n";
-            lore+="You are the Axiom of Objectivity. You stand beyond the struggle between light and darkness and possess the ability to perceive reality exactly as it is. Your mind is untouched by illusion, bias, or deception, allowing you to comprehend truths that would shatter the minds of ordinary beings. Beyond this perfect perception lies an even greater power: the ability to influence the fundamental laws of reality itself. You do not choose between opposing forces, nor do you obey the rules that bind them. You simply observe the truth, understand it, and decide what the truth should become. ";
+            lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+lore_defs.at(player.powers.basic)+" \n";
+            lore+="You are the Axiom of Objectivity. "+lore_defs.at("objectivity_axiom");
         }
-    }else{lore+="Legend has it that one in a thousand people are born as the Absolute. You are one of them. You possess the power of the Nexus, the clarity of Objectivity, and the authority of the Axiom. Every element lies within your command, neither light nor darkness can sway your judgment, and the fundamental laws of reality are open to your understanding. You are not bound by the forces that govern ordinary beings because you stand above them, able to command the elements, perceive the truth, and reshape reality itself. Ancient civilizations could only speculate about such a being, believing that the convergence of these powers was impossible. Yet you exist, and the world now faces a question that has never had an answer: what does a being with no limits choose to do with them? ";}
+    }else{lore+=lore_defs.at("absolute");}
     return lore;
 }
 void attack(player& attacker,enemy& attackee,string attacking_move){
@@ -220,7 +226,6 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
     return !turn;
 }
 int main() {
-    load_jsons();
     cout<<"Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n";
     player player;
     cout<<player.name<<" has been created with the following stats: \n";
