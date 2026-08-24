@@ -89,6 +89,7 @@ struct enemy {
     vector<string> known_moves;
     vector<string> pets;
     unordered_map<string,int>cooldown_times={};
+    power_construct memory;
 };
 struct player {
     string name;
@@ -189,12 +190,12 @@ void attack(enemy& attacker,player& attackee,string attacking_move){
     attackee.stats.health-=moves.at(attacking_move).damage*attacker.stats.attack/attackee.stats.defense;
 }
 bool battle_loop(bool turn,player& player,enemy& enemy){
+    vector<string> available_moves;
     if(turn){
         string action="see moves";
         while(action=="see moves"){
             action=user_input(string("You have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\nWhat would you like to do?"),{"use move", "see moves"});
-            vector<string> available_moves;
-            for(size_t i=0;i<player.known_moves.size();++i){if (player.cooldown_times.find(player.known_moves[i])==player.cooldown_times.end()){available_moves.push_back(player.known_moves[i]);}}
+            for(size_t i=0;i<player.known_moves.size();++i){if(player.cooldown_times.find(player.known_moves[i])==player.cooldown_times.end()){available_moves.push_back(player.known_moves[i]);}}
             if(action=="see moves"){
                 cout<<"You can use the following moves: \n";
                 for (size_t i=0;i<available_moves.size();++i){
@@ -214,14 +215,12 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
         }
         for (auto it=player.cooldown_times.begin();it!=player.cooldown_times.end();){
             it->second--;
-            if (it->second<=0) {
-                it=player.cooldown_times.erase(it);
-            }else{
-                ++it;
-            }
+            if (it->second<=0){it=player.cooldown_times.erase(it);}
+            else{it++;}
         }
     }else{
-        //enemy logic or something idk
+        for(size_t i=0;i<enemy.known_moves.size();++i){if(enemy.cooldown_times.find(enemy.known_moves[i])==enemy.cooldown_times.end()){available_moves.push_back(enemy.known_moves[i]);}}
+        // pick the highest damage move based off calculations from enemy.memory. do not reference player.powers at all here.
     }
     return !turn;
 }
@@ -235,7 +234,7 @@ int main() {
     cout<<"Health: "<<player.stats.health<<" \n";
     cout<<get_lore(player)<<"\n";
     cout<<"You are now ready to embark on your journey. Good luck, and may the forces of magic be with you! \n";
-    enemy bob{"bob",{10,10,10,100},{},{},{},{}};
+    enemy bob{"bob",{10,10,10,100},{},{},{},{},{}};
     std::uniform_int_distribution<size_t> basic_dist(0,basic_powers.size()-1);
     bob.powers.basic=basic_powers[basic_dist(gen)];
     std::uniform_int_distribution<size_t> alignment_dist(0,alignments.size()-1);
