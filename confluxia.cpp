@@ -221,6 +221,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
     }else{
         for(size_t i=0;i<enemy.known_moves.size();++i){if(enemy.cooldown_times.find(enemy.known_moves[i])==enemy.cooldown_times.end()){available_moves.push_back(enemy.known_moves[i]);}}
         // pick the highest damage move based off calculations from enemy.memory. do not reference player.powers at all here.
+        //  
     }
     return !turn;
 }
