@@ -1,0 +1,15 @@
+{
+    "fire":["metal","wood"],
+    "metal":["wood","earth"],
+    "wood":["earth","water"],
+    "earth":["water","fire"],
+    "water":["fire","metal"],
+    "nexus":["fire","metal","wood","earth","water"],
+    "light":["dark"],
+    "dark":["light"],
+    "objectivity":["light","dark"],
+    "space":["time"],
+    "time":["space"],
+    "axiom":["space","time"],
+    "":[]
+}

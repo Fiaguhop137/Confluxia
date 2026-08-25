@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <random>
 #include <cctype>
+#include <cmath>
 #include <fstream>
 #include "assets/json.hpp"
 using json=nlohmann::json;
@@ -40,9 +41,17 @@ unordered_map<string,string> load_lore() {
     for (const auto& [id,value]:data.items()){result[id]=value;}
     return(result);
 }
+unordered_map<string,vector<string>> load_modifiers() {
+    unordered_map<string,vector<string>>result;
+    std::ifstream file("assets/data/modifiers.json");
+    json data=json::parse(file);
+    for (const auto& [id,value]:data.items()){result[id]=value;}
+    return(result);
+}
 const unordered_map<string,move>moves=load_moves();
 const unordered_map<string,string>lore_defs=load_lore();
-string user_input(string prompt,vector<string>valid_options={}) {
+const unordered_map<string,vector<string>> modifiers=load_modifiers();
+string user_input(string prompt,vector<string>valid_options={}){
     while(true){
         string response;
         cout<<prompt<<" ";
@@ -57,18 +66,35 @@ string user_input(string prompt,vector<string>valid_options={}) {
             cout<<" or "<<valid_options.back()<<") ";
         }
         std::getline(cin, response);
-        if(!valid_options.empty()&&find(valid_options.begin(),valid_options.end(),response)==valid_options.end()){
-            cout<<"Invalid input. Please choose ";
-            for(size_t i=0;i<valid_options.size()-1;i++) {
-                cout<<valid_options[i];
-                if(i<valid_options.size()-2) {
-                    cout<<", ";
+        string response_lower=response;
+        std::transform(response_lower.begin(),response_lower.end(),response_lower.begin(),[](unsigned char c){return std::tolower(c);});
+        if(!valid_options.empty()){
+            bool valid=false;
+            for(const auto& option:valid_options){
+                string option_lower=option;
+                std::transform(option_lower.begin(),option_lower.end(),option_lower.begin(),[](unsigned char c){return std::tolower(c);});
+                if(response_lower==option_lower){
+                    valid=true;
+                    response=option;
+                    break;
                 }
             }
-            cout<<" or "<<valid_options.back()<<". ";
+            if(!valid){
+                cout<<"Invalid input. Please choose ";
+                for(size_t i=0;i<valid_options.size()-1;i++) {
+                    cout<<valid_options[i];
+                    if(i<valid_options.size()-2) {
+                        cout<<", ";
+                    }
+                }
+                cout<<" or "<<valid_options.back()<<". ";
+            }else{
+                return(response);
+            }
         }else{
-            return(response);
-        }
+                return(response);
+            }
+        
     }
 }
 struct stat_block {
@@ -181,13 +207,19 @@ string get_lore(const player&player){
     }else{lore+=lore_defs.at("absolute");}
     return lore;
 }
-void attack(player& attacker,enemy& attackee,string attacking_move){
-    attacker.cooldown_times[attacking_move]=moves.at(attacking_move).cooldown;
-    attackee.stats.health-=moves.at(attacking_move).damage*attacker.stats.attack/attackee.stats.defense;
-}
-void attack(enemy& attacker,player& attackee,string attacking_move){
-    attacker.cooldown_times[attacking_move]=moves.at(attacking_move).cooldown;
-    attackee.stats.health-=moves.at(attacking_move).damage*attacker.stats.attack/attackee.stats.defense;
+int get_damage(const bool apply_cooldown,unordered_map<string,int>& attacker_cooldown_times,const stat_block& attacker_stats,const stat_block& attackee_stats,const power_construct& attackee_types,string attacking_move){
+    const string attack_type=moves.at(attacking_move).type;
+    string defender_type;
+    if(find(basic_powers.begin(),basic_powers.end(),attack_type)!=basic_powers.end()){defender_type=attackee_types.basic;}
+    else if(find(alignments.begin(),alignments.end(),attack_type)!=alignments.end()){defender_type=attackee_types.alignment;}
+    else if(find(cosmic_powers.begin(),cosmic_powers.end(),attack_type)!=cosmic_powers.end()){defender_type=attackee_types.cosmic;}
+    else{defender_type="";}
+    int damage_multipliernum=1;
+    int damage_multiplierden=1;
+    if (find(modifiers.at(attack_type).begin(),modifiers.at(attack_type).end(),defender_type)!=modifiers.at(attack_type).end()){damage_multipliernum=2;}
+    else if(find(modifiers.at(defender_type).begin(),modifiers.at(defender_type).end(),attack_type)!=modifiers.at(defender_type).end()){damage_multiplierden=2;}
+    if(apply_cooldown){attacker_cooldown_times[attacking_move]=moves.at(attacking_move).cooldown;}
+    return(std::round(1.0*moves.at(attacking_move).damage*attacker_stats.attack/attackee_stats.defense*damage_multipliernum/damage_multiplierden));
 }
 bool battle_loop(bool turn,player& player,enemy& enemy){
     vector<string> available_moves;
@@ -195,6 +227,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
         string action="see moves";
         while(action=="see moves"){
             action=user_input(string("You have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\nWhat would you like to do?"),{"use move", "see moves"});
+            available_moves.clear();
             for(size_t i=0;i<player.known_moves.size();++i){if(player.cooldown_times.find(player.known_moves[i])==player.cooldown_times.end()){available_moves.push_back(player.known_moves[i]);}}
             if(action=="see moves"){
                 cout<<"You can use the following moves: \n";
@@ -210,7 +243,24 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
                 vector<string> available_move_names;
                 for(const auto& pair:move_lookup){available_move_names.push_back(pair.first);}
                 string move_to_use=user_input("What move would you like to use?",{available_move_names});
-                attack(player,enemy,move_lookup[move_to_use]);
+                string move_to_use_id=move_lookup[move_to_use];
+                enemy.stats.health-=get_damage(true,player.cooldown_times,player.stats,enemy.stats,enemy.powers,move_to_use_id);
+                if(moves.at(move_to_use_id).level=="basic"){
+                    if(enemy.memory.basic!=moves.at(move_to_use_id).type&&enemy.memory.basic!="nexus"){
+                        if(enemy.memory.basic==""){enemy.memory.basic=moves.at(move_to_use_id).type;}
+                        else{enemy.memory.basic="nexus";}
+                    }
+                }else if(moves.at(move_to_use_id).level=="alignment"){
+                    if(enemy.memory.alignment!=moves.at(move_to_use_id).type&&enemy.memory.alignment!="objectivity"){
+                        if(enemy.memory.alignment==""){enemy.memory.alignment=moves.at(move_to_use_id).type;}
+                        else{enemy.memory.alignment="objectivity";}
+                    }
+                }else if(moves.at(move_to_use_id).level=="cosmic"){
+                    if(enemy.memory.cosmic!=moves.at(move_to_use_id).type&&enemy.memory.cosmic!="axiom"){
+                        if(enemy.memory.cosmic==""){enemy.memory.cosmic=moves.at(move_to_use_id).type;}
+                        else{enemy.memory.cosmic="axiom";}
+                    }
+                }
             }
         }
         for (auto it=player.cooldown_times.begin();it!=player.cooldown_times.end();){
@@ -220,8 +270,28 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
         }
     }else{
         for(size_t i=0;i<enemy.known_moves.size();++i){if(enemy.cooldown_times.find(enemy.known_moves[i])==enemy.cooldown_times.end()){available_moves.push_back(enemy.known_moves[i]);}}
-        // pick the highest damage move based off calculations from enemy.memory. do not reference player.powers at all here.
-        //  
+        string best_move=available_moves[0];
+        int best_damage=0;
+        for(const auto& move_id:available_moves){
+            int damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,enemy.memory,move_id);
+            if(damage>best_damage){
+                best_damage=damage;
+                best_move=move_id;
+            }
+        }
+        player.stats.health-=get_damage(true,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
+        const int actual_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
+        const int expected_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,enemy.memory,best_move);
+        if(actual_damage!=expected_damage){
+            if(moves.at(best_move).level=="basic"){enemy.memory.basic=player.powers.basic;}
+            else if(moves.at(best_move).level=="alignment"){enemy.memory.alignment=player.powers.alignment;}
+            else if(moves.at(best_move).level=="cosmic"){enemy.memory.cosmic=player.powers.cosmic;}
+        }
+        for (auto it=enemy.cooldown_times.begin();it!=enemy.cooldown_times.end();){
+            it->second--;
+            if (it->second<=0){it=enemy.cooldown_times.erase(it);}
+            else{it++;}
+        }
     }
     return !turn;
 }
@@ -257,6 +327,6 @@ int main() {
             }
         }
     }
-    battle_loop(true,player,bob);
-    return 0;
+    bool turn=true;
+    while(player.stats.health>0&&bob.stats.health>0){turn=battle_loop(turn,player,bob);}
 }
