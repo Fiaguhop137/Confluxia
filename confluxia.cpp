@@ -226,7 +226,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
     if(turn){
         string action="see moves";
         while(action=="see moves"){
-            action=user_input(string("You have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\nWhat would you like to do?"),{"use move", "see moves"});
+            action=user_input(string("What would you like to do?"),{"use move", "see moves"});
             available_moves.clear();
             for(size_t i=0;i<player.known_moves.size();++i){if(player.cooldown_times.find(player.known_moves[i])==player.cooldown_times.end()){available_moves.push_back(player.known_moves[i]);}}
             if(action=="see moves"){
@@ -280,6 +280,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
             }
         }
         player.stats.health-=get_damage(true,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
+        cout<<"Bob used "<<moves.at(best_move).name<<" and dealt "<<best_damage<<" damage to you! \n"<<"You have "+std::to_string(player.stats.health)+" health remaining. \n";
         const int actual_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
         const int expected_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,enemy.memory,best_move);
         if(actual_damage!=expected_damage){
@@ -328,5 +329,15 @@ int main() {
         }
     }
     bool turn=true;
-    while(player.stats.health>0&&bob.stats.health>0){turn=battle_loop(turn,player,bob);}
+    cout<<"You have encountered Bob! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n";
+    while(player.stats.health>0&&bob.stats.health>0){
+        turn=battle_loop(turn,player,bob);
+        if(1.0*(bob.stats.health-player.stats.health)/player.stats.health>0){
+            cout<<"Bob has "<<std::round((1.0*(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% more health than you. \n";
+        }else if((bob.stats.health-player.stats.health)/player.stats.health<0){
+            cout<<"Bob has "<<-std::round((1.0*(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% less health than you. \n";
+        }else{
+            cout<<"Bob has the same health as you. \n";
+        }
+    }
 }
