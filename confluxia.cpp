@@ -54,7 +54,7 @@ const unordered_map<string,move>moves=load_moves();
 const unordered_map<string,string>lore_defs=load_lore();
 const unordered_map<string,vector<string>> modifiers=load_modifiers();
 void print(string text){
-    for(int i=0;i<text.size();i++){
+    for (size_t i=0,len=text.size();i<len;++i){
         cout<<text[i];
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
