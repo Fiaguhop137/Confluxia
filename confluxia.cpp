@@ -261,6 +261,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
                         else{enemy.memory.cosmic="axiom";}
                     }
                 }
+                cout<<"You used "<<moves.at(move_to_use_id).name<<" and dealt "<<moves.at(move_to_use_id).damage<<" damage to Bob! \n";
             }
         }
         for (auto it=player.cooldown_times.begin();it!=player.cooldown_times.end();){
