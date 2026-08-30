@@ -53,10 +53,10 @@ unordered_map<string,vector<string>> load_modifiers() {
 const unordered_map<string,move>moves=load_moves();
 const unordered_map<string,string>lore_defs=load_lore();
 const unordered_map<string,vector<string>> modifiers=load_modifiers();
-void print(string text){
+void typeprint(string text){
     for (size_t i=0,len=text.size();i<len;++i){
         cout<<text[i];
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 string user_input(string prompt,vector<string>valid_options={}){
@@ -306,7 +306,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
     return !turn;
 }
 int main() {
-    print("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
+    typeprint("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
     player player;
     cout<<player.name<<" has been created with the following stats: \n";
     cout<<"Attack: "<<player.stats.attack<<" \n";
