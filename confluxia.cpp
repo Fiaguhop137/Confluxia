@@ -7,6 +7,8 @@
 #include <cctype>
 #include <cmath>
 #include <fstream>
+#include <thread>
+#include <chrono>
 #include "assets/json.hpp"
 using json=nlohmann::json;
 using std::cin;
@@ -51,6 +53,12 @@ unordered_map<string,vector<string>> load_modifiers() {
 const unordered_map<string,move>moves=load_moves();
 const unordered_map<string,string>lore_defs=load_lore();
 const unordered_map<string,vector<string>> modifiers=load_modifiers();
+void print(string text){
+    for(int i=0;i<text.size();i++){
+        cout<<text[i];
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+}
 string user_input(string prompt,vector<string>valid_options={}){
     while(true){
         string response;
@@ -281,9 +289,9 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
             }
         }
         player.stats.health-=get_damage(true,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
-        cout<<"Bob used "<<moves.at(best_move).name<<" and dealt "<<best_damage<<" damage to you! \n"<<"You have "+std::to_string(player.stats.health)+" health remaining. \n";
         const int actual_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
         const int expected_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,enemy.memory,best_move);
+        cout<<"Bob used "<<moves.at(best_move).name<<" and dealt "<<actual_damage<<" damage to you! \n"<<"You have "+std::to_string(player.stats.health)+" health remaining. \n";
         if(actual_damage!=expected_damage){
             if(moves.at(best_move).level=="basic"){enemy.memory.basic=player.powers.basic;}
             else if(moves.at(best_move).level=="alignment"){enemy.memory.alignment=player.powers.alignment;}
@@ -298,7 +306,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
     return !turn;
 }
 int main() {
-    cout<<"Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n";
+    print("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
     player player;
     cout<<player.name<<" has been created with the following stats: \n";
     cout<<"Attack: "<<player.stats.attack<<" \n";
