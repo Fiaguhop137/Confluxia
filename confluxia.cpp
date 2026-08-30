@@ -1,15 +1,19 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 #include <algorithm>
-#include <random>
 #include <cctype>
 #include <cmath>
-#include <fstream>
-#include <thread>
+#include <random>
 #include <chrono>
+#include <thread>
 #include "assets/json.hpp"
+#include "assets/data/lore.hpp"
+#include "assets/data/modifiers.hpp"
+#include "assets/data/moves.hpp"
+#include "assets/data/pets.hpp"
 using json=nlohmann::json;
 using std::cin;
 using std::cout;
@@ -29,33 +33,45 @@ struct move {
     string type;
     string level;
 };
+struct pet {
+    string name;
+    string type;
+    string rarity;
+    int buffed_stat;
+    string move;
+    string description;
+};
 unordered_map<string,move> load_moves() {
     unordered_map<string,move>result;
-    std::ifstream file("assets/data/moves.json");
-    json data=json::parse(file);
-    for (const auto& [id,value]:data.items()){result[id]={value["name"],value["damage"],value["cooldown"],value["type"],value["level"]};}
+    json data=json::parse(confluxed_assets::moves);
+    for (const auto& [key,value]:data.items()){result[key]={value["name"],value["damage"],value["cooldown"],value["type"],value["level"]};}
+    return(result);
+}
+unordered_map<string,pet> load_pets() {
+    unordered_map<string,pet>result;
+    json data=json::parse(confluxed_assets::pets);
+    for (const auto& [key,value]:data.items()){result[key]={value["name"],value["type"],value["rarity"],value["buffed_stat"],value["move"],value["description"]};}
     return(result);
 }
 unordered_map<string,string> load_lore() {
-    unordered_map<string,string>result;
-    std::ifstream file("assets/data/lore.json");
-    json data=json::parse(file);
+    unordered_map<string,string> result;
+    json data=json::parse(confluxed_assets::lore);
     for (const auto& [id,value]:data.items()){result[id]=value;}
     return(result);
 }
 unordered_map<string,vector<string>> load_modifiers() {
     unordered_map<string,vector<string>>result;
-    std::ifstream file("assets/data/modifiers.json");
-    json data=json::parse(file);
+    json data=json::parse(confluxed_assets::modifiers);
     for (const auto& [id,value]:data.items()){result[id]=value;}
     return(result);
 }
 const unordered_map<string,move>moves=load_moves();
+const unordered_map<string,pet>pets=load_pets();
 const unordered_map<string,string>lore_defs=load_lore();
 const unordered_map<string,vector<string>> modifiers=load_modifiers();
 void typeprint(string text){
     for (size_t i=0,len=text.size();i<len;++i){
-        cout<<text[i]<<std::flush;;
+        cout<<text[i]<<std::flush;
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 }
@@ -227,8 +243,13 @@ int get_damage(const bool apply_cooldown,unordered_map<string,int>& attacker_coo
     else{defender_type="";}
     int damage_multipliernum=1;
     int damage_multiplierden=1;
-    if (find(modifiers.at(attack_type).begin(),modifiers.at(attack_type).end(),defender_type)!=modifiers.at(attack_type).end()){damage_multipliernum=2;}
-    else if(find(modifiers.at(defender_type).begin(),modifiers.at(defender_type).end(),attack_type)!=modifiers.at(defender_type).end()){damage_multiplierden=2;}
+    int lvlmod;
+    if(moves.at(attacking_move).level=="basic"){lvlmod=2;}
+    else if(moves.at(attacking_move).level=="alignment"){lvlmod=3;}
+    else if(moves.at(attacking_move).level=="cosmic"){lvlmod=4;}
+    else{throw(std::invalid_argument("No move level found"));}
+    if (find(modifiers.at(attack_type).begin(),modifiers.at(attack_type).end(),defender_type)!=modifiers.at(attack_type).end()){damage_multipliernum=lvlmod;}
+    else if(find(modifiers.at(defender_type).begin(),modifiers.at(defender_type).end(),attack_type)!=modifiers.at(defender_type).end()){damage_multiplierden=lvlmod;}
     if(apply_cooldown){attacker_cooldown_times[attacking_move]=moves.at(attacking_move).cooldown;}
     return(static_cast<int>(std::round(static_cast<double>(moves.at(attacking_move).damage)*static_cast<double>(attacker_stats.attack)/static_cast<double>(attackee_stats.defense)*static_cast<double>(damage_multipliernum)/static_cast<double>(damage_multiplierden))));
 }
