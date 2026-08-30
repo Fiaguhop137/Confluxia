@@ -1,29 +1,11 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "type": "cppbuild",
-            "label": "C/C++: g++ build confluxia",
-            "command": "/usr/bin/g++",
-            "args": [
-                "-std=c++17",
-                "-I",
-                "${workspaceFolder}",
-                "${workspaceFolder}/confluxia.cpp",
-                "-o",
-                "${workspaceFolder}/confluxia"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "detail": "Build confluxia with g++"
+            "label": "Run Confluxia",
+            "type": "shell",
+            "command": "git sync && g++ -std=c++23 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -fdiagnostics-color=always confluxia.cpp -o confluxia && ./confluxia",
+            "problemMatcher": []
         }
-    ],
-    "version": "2.0.0"
+    ]
 }

@@ -166,11 +166,11 @@ struct player {
 string get_lore(const player&player){
     string lore="";
     string basic_power_upper=player.powers.basic;
-    basic_power_upper[0]=std::toupper(basic_power_upper[0]);
+    basic_power_upper[0]=static_cast<char>(std::toupper(static_cast<unsigned char>(basic_power_upper[0])));
     string alignment_power_upper=player.powers.alignment;
-    alignment_power_upper[0]=std::toupper(alignment_power_upper[0]);
+    alignment_power_upper[0]=static_cast<char>(std::toupper(static_cast<unsigned char>(alignment_power_upper[0])));
     string cosmic_power_upper=player.powers.cosmic;
-    cosmic_power_upper[0]=std::toupper(cosmic_power_upper[0]);
+    cosmic_power_upper[0]=static_cast<char>(std::toupper(static_cast<unsigned char>(cosmic_power_upper[0])));
     if(player.rare_traits==0){
         lore+="You have the power of "+player.powers.basic+". "+basic_power_upper+" is "+lore_defs.at(player.powers.basic)+" \n";
         lore+="You have the power of "+player.powers.alignment+". "+alignment_power_upper+" is "+lore_defs.at(player.powers.alignment)+" \n";
@@ -219,7 +219,7 @@ int get_damage(const bool apply_cooldown,unordered_map<string,int>& attacker_coo
     if (find(modifiers.at(attack_type).begin(),modifiers.at(attack_type).end(),defender_type)!=modifiers.at(attack_type).end()){damage_multipliernum=2;}
     else if(find(modifiers.at(defender_type).begin(),modifiers.at(defender_type).end(),attack_type)!=modifiers.at(defender_type).end()){damage_multiplierden=2;}
     if(apply_cooldown){attacker_cooldown_times[attacking_move]=moves.at(attacking_move).cooldown;}
-    return(std::round(1.0*moves.at(attacking_move).damage*attacker_stats.attack/attackee_stats.defense*damage_multipliernum/damage_multiplierden));
+    return(static_cast<int>(std::round(static_cast<double>(moves.at(attacking_move).damage)*static_cast<double>(attacker_stats.attack)/static_cast<double>(attackee_stats.defense)*static_cast<double>(damage_multipliernum)/static_cast<double>(damage_multiplierden))));
 }
 bool battle_loop(bool turn,player& player,enemy& enemy){
     vector<string> available_moves;
@@ -332,12 +332,16 @@ int main() {
     cout<<"You have encountered Bob! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n";
     while(player.stats.health>0&&bob.stats.health>0){
         turn=battle_loop(turn,player,bob);
-        if(1.0*(bob.stats.health-player.stats.health)/player.stats.health>0){
-            cout<<"Bob has "<<std::round((1.0*(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% more health than you. \n";
-        }else if((bob.stats.health-player.stats.health)/player.stats.health<0){
-            cout<<"Bob has "<<-std::round((1.0*(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% less health than you. \n";
-        }else{
-            cout<<"Bob has the same health as you. \n";
+        if(bob.stats.health<=0){cout<<"You have defeated Bob! \n";}
+        else if(player.stats.health<=0){cout<<"You have been defeated by Bob. \n";}
+        else{
+            if(1.0*(bob.stats.health-player.stats.health)/player.stats.health>0){
+                cout<<"Bob has "<<std::round((1.0*(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% more health than you. \n";
+            }else if((bob.stats.health-player.stats.health)/player.stats.health<0){
+                cout<<"Bob has "<<-std::round((1.0*(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% less health than you. \n";
+            }else{
+                cout<<"Bob has the same health as you. \n";
+            }
         }
     }
 }
