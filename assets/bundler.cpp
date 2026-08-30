@@ -48,6 +48,7 @@ void generate_header(const fs::path& json_path,const fs::path& output_path){
     output<<"}\n";
 }
 int main(){
+    std::cout<<"Bundling assets...\n";
     const fs::path assets_dir="assets";
     const fs::path output_dir="assets";
     fs::create_directories(output_dir);
@@ -71,5 +72,5 @@ int main(){
             return 1;
         }
     }
-    std::cout<<"Done.\n";
+    std::cout<<"Finished bundling assets.\nCompiling Confluxia...\n";
 }
