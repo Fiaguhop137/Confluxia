@@ -314,7 +314,7 @@ int main() {
     std::uniform_int_distribution<size_t> cosmic_dist(0,cosmic_powers.size()-1);
     bob.powers.cosmic=cosmic_powers[cosmic_dist(gen)];
     std::bernoulli_distribution randbool(0.5);
-    for (const auto& [id,val]:moves) {
+    for (const auto& [id,val]:moves){
         if(val.type==bob.powers.basic||val.type==bob.powers.alignment||val.type==bob.powers.cosmic){
             if(randbool(gen)){
                 bob.known_moves.push_back(id);
@@ -335,10 +335,10 @@ int main() {
         if(bob.stats.health<=0){cout<<"You have defeated Bob! \n";}
         else if(player.stats.health<=0){cout<<"You have been defeated by Bob. \n";}
         else{
-            if(1.0*(bob.stats.health-player.stats.health)/player.stats.health>0){
-                cout<<"Bob has "<<std::round((1.0*(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% more health than you. \n";
-            }else if((bob.stats.health-player.stats.health)/player.stats.health<0){
-                cout<<"Bob has "<<-std::round((1.0*(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% less health than you. \n";
+            if(static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health>0.0){
+                cout<<"Bob has "<<std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% more health than you. \n";
+            }else if(static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health<0.0){
+                cout<<"Bob has "<<-std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% less health than you. \n";
             }else{
                 cout<<"Bob has the same health as you. \n";
             }
