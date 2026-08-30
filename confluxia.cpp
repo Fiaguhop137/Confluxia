@@ -56,22 +56,25 @@ const unordered_map<string,vector<string>> modifiers=load_modifiers();
 void typeprint(string text){
     for (size_t i=0,len=text.size();i<len;++i){
         cout<<text[i]<<std::flush;;
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 }
 string user_input(string prompt,vector<string>valid_options={}){
     while(true){
         string response;
-        cout<<prompt<<" ";
+        typeprint(prompt);
+        typeprint(" ");
         if(!valid_options.empty()){
-            cout<<"(";
+            typeprint("(");
             for(size_t i=0;i<valid_options.size()-1;i++) {
-                cout<<valid_options[i];
+                typeprint(valid_options[i]);
                 if(i<valid_options.size()-2) {
-                    cout<<", ";
+                    typeprint(", ");
                 }
             }
-            cout<<" or "<<valid_options.back()<<") ";
+            typeprint(" or ");
+            typeprint(valid_options.back());
+            typeprint(") ");
         }
         std::getline(cin, response);
         string response_lower=response;
@@ -88,14 +91,14 @@ string user_input(string prompt,vector<string>valid_options={}){
                 }
             }
             if(!valid){
-                cout<<"Invalid input. Please choose ";
+                typeprint("Invalid input. Please choose ");
                 for(size_t i=0;i<valid_options.size()-1;i++) {
-                    cout<<valid_options[i];
+                    typeprint(valid_options[i]);
                     if(i<valid_options.size()-2) {
-                        cout<<", ";
+                        typeprint(", ");
                     }
                 }
-                cout<<" or "<<valid_options.back()<<". ";
+                typeprint(" or "+valid_options.back()+". ");
             }else{
                 return(response);
             }
@@ -238,12 +241,12 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
             available_moves.clear();
             for(size_t i=0;i<player.known_moves.size();++i){if(player.cooldown_times.find(player.known_moves[i])==player.cooldown_times.end()){available_moves.push_back(player.known_moves[i]);}}
             if(action=="see moves"){
-                cout<<"You can use the following moves: \n";
+                typeprint("You can use the following moves: \n");
                 for (size_t i=0;i<available_moves.size();++i){
                     string cooldown;
                     if(moves.at(available_moves[i]).cooldown==1){cooldown="no";}
                     else{cooldown=std::to_string(moves.at(available_moves[i]).cooldown-1)+"-turn";}
-                    cout<<moves.at(available_moves[i]).name<<": "<<moves.at(available_moves[i]).damage<<" damage, "<<cooldown<<" cooldown \n";
+                    typeprint(moves.at(available_moves[i]).name+": "+std::to_string(moves.at(available_moves[i]).damage)+" damage, "+cooldown+" cooldown \n");
                 }
             }else{
                 unordered_map<string,string> move_lookup;
@@ -269,7 +272,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
                         else{enemy.memory.cosmic="axiom";}
                     }
                 }
-                cout<<"You used "<<moves.at(move_to_use_id).name<<" and dealt "<<moves.at(move_to_use_id).damage<<" damage to Bob! \n";
+                typeprint("You used "+moves.at(move_to_use_id).name+" and dealt "+std::to_string(moves.at(move_to_use_id).damage)+" damage to Bob! \n");
             }
         }
         for (auto it=player.cooldown_times.begin();it!=player.cooldown_times.end();){
@@ -291,7 +294,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
         player.stats.health-=get_damage(true,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
         const int actual_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
         const int expected_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,enemy.memory,best_move);
-        cout<<"Bob used "<<moves.at(best_move).name<<" and dealt "<<actual_damage<<" damage to you! \n"<<"You have "+std::to_string(player.stats.health)+" health remaining. \n";
+        typeprint("Bob used "+moves.at(best_move).name+" and dealt "+std::to_string(actual_damage)+" damage to you! \n"+"You have "+std::to_string(player.stats.health)+" health remaining. \n");
         if(actual_damage!=expected_damage){
             if(moves.at(best_move).level=="basic"){enemy.memory.basic=player.powers.basic;}
             else if(moves.at(best_move).level=="alignment"){enemy.memory.alignment=player.powers.alignment;}
@@ -308,13 +311,13 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
 int main() {
     typeprint("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
     player player;
-    cout<<player.name<<" has been created with the following stats: \n";
-    cout<<"Attack: "<<player.stats.attack<<" \n";
-    cout<<"Speed: "<<player.stats.speed<<" \n";
-    cout<<"Defense: "<<player.stats.defense<<" \n";
-    cout<<"Health: "<<player.stats.health<<" \n";
-    cout<<get_lore(player)<<"\n";
-    cout<<"You are now ready to embark on your journey. Good luck, and may the forces of magic be with you! \n";
+    typeprint(player.name+" has been created with the following stats: \n");
+    typeprint("Attack: "+std::to_string(player.stats.attack)+" \n");
+    typeprint("Speed: "+std::to_string(player.stats.speed)+" \n");
+    typeprint("Defense: "+std::to_string(player.stats.defense)+" \n");
+    typeprint("Health: "+std::to_string(player.stats.health)+" \n");
+    typeprint(get_lore(player)+"\n");
+    typeprint("You are now ready to embark on your journey. Good luck, and may the forces of magic be with you! \n");
     enemy bob{"bob",{10,10,10,100},{},{},{},{},{}};
     std::uniform_int_distribution<size_t> basic_dist(0,basic_powers.size()-1);
     bob.powers.basic=basic_powers[basic_dist(gen)];
@@ -338,18 +341,18 @@ int main() {
         }
     }
     bool turn=true;
-    cout<<"You have encountered Bob! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n";
+    typeprint("You have encountered Bob! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n");
     while(player.stats.health>0&&bob.stats.health>0){
         turn=battle_loop(turn,player,bob);
-        if(bob.stats.health<=0){cout<<"You have defeated Bob! \n";}
-        else if(player.stats.health<=0){cout<<"You have been defeated by Bob. \n";}
+        if(bob.stats.health<=0){typeprint("You have defeated Bob! \n");}
+        else if(player.stats.health<=0){typeprint("You have been defeated by Bob. \n");}
         else{
             if(static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health>0.0){
-                cout<<"Bob has "<<std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% more health than you. \n";
+                typeprint("Bob has "+std::to_string(std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100)+"% more health than you. \n");
             }else if(static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health<0.0){
-                cout<<"Bob has "<<-std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100<<"% less health than you. \n";
+                typeprint("Bob has "+std::to_string(-std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100)+"% less health than you. \n");
             }else{
-                cout<<"Bob has the same health as you. \n";
+                typeprint("Bob has the same health as you. \n");
             }
         }
     }
