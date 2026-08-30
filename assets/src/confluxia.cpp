@@ -320,9 +320,9 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
                 best_move=move_id;
             }
         }
-        player.stats.health-=get_damage(true,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
-        const int actual_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
+        const int actual_damage=get_damage(true,enemy.cooldown_times,enemy.stats,player.stats,player.powers,best_move);
         const int expected_damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,enemy.memory,best_move);
+        player.stats.health-=actual_damage;
         typeprint("Bob used "+moves.at(best_move).name+" and dealt "+std::to_string(actual_damage)+" damage to you! \n"+"You have "+std::to_string(player.stats.health)+" health remaining. \n");
         if(actual_damage!=expected_damage){
             if(moves.at(best_move).level=="basic"){enemy.memory.basic=player.powers.basic;}
