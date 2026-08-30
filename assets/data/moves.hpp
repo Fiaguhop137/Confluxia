@@ -1,10 +1,6 @@
 #pragma once
-
 #include <string_view>
-
-namespace confluxed_assets{
-
-inline constexpr std::string_view moves=R"JSON({
+namespace confluxed_assets{inline constexpr std::string_view moves=R"JSON({
     "flame_burst":{
         "name":"Flame Burst",
         "damage":10,
@@ -236,6 +232,4 @@ inline constexpr std::string_view moves=R"JSON({
         "type":"time",
         "level":"cosmic"
         }
-})JSON";
-
-}
+})JSON";}

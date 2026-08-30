@@ -1,10 +1,6 @@
 #pragma once
-
 #include <string_view>
-
-namespace confluxed_assets{
-
-inline constexpr std::string_view pets=R"JSON({
+namespace confluxed_assets{inline constexpr std::string_view pets=R"JSON({
     "flickerkit": {
         "name": "Flickerkit",
         "type": "fire",
@@ -270,6 +266,4 @@ inline constexpr std::string_view pets=R"JSON({
         "description": "An ageless guardian that watches the past and future unfold at once."
     }
 }
-)JSON";
-
-}
+)JSON";}

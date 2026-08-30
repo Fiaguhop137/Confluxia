@@ -1,10 +1,6 @@
 #pragma once
-
 #include <string_view>
-
-namespace confluxed_assets{
-
-inline constexpr std::string_view modifiers=R"JSON({
+namespace confluxed_assets{inline constexpr std::string_view modifiers=R"JSON({
     "fire":["metal","wood"],
     "metal":["wood","earth"],
     "wood":["earth","water"],
@@ -18,6 +14,4 @@ inline constexpr std::string_view modifiers=R"JSON({
     "time":["space"],
     "axiom":["space","time"],
     "":[]
-})JSON";
-
-}
+})JSON";}

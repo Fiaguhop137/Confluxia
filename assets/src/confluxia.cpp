@@ -9,11 +9,11 @@
 #include <random>
 #include <chrono>
 #include <thread>
-#include "json.hpp"
-#include "data/lore.hpp"
-#include "data/modifiers.hpp"
-#include "data/moves.hpp"
-#include "data/pets.hpp"
+#include "../data/json.hpp"
+#include "../data/lore.hpp"
+#include "../data/modifiers.hpp"
+#include "../data/moves.hpp"
+#include "../data/pets.hpp"
 using json=nlohmann::json;
 using std::cin;
 using std::cout;

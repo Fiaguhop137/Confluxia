@@ -39,28 +39,26 @@ void generate_header(const fs::path& json_path,const fs::path& output_path){
     if(!output){
         throw std::runtime_error("Could not create "+output_path.string());
     }
-    output<<"#pragma once\n\n";
-    output<<"#include <string_view>\n\n";
-    output<<"namespace confluxed_assets{\n\n";
+    output<<"#pragma once\n";
+    output<<"#include <string_view>\n";
+    output<<"namespace confluxed_assets{";
     output<<"inline constexpr std::string_view "<<identifier<<"=R\"JSON(";
     output<<data;
-    output<<")JSON\";\n\n";
-    output<<"}\n";
+    output<<")JSON\";";
+    output<<"}";
 }
 int main(){
     std::cout<<"Bundling assets...\n";
     const fs::path assets_dir="assets";
-    const fs::path output_dir="assets";
-    fs::create_directories(output_dir);
     for(const auto& entry :fs::recursive_directory_iterator(assets_dir)){
         if(!entry.is_regular_file()){
             continue;
         }
-        if(entry.path().extension() !=".json"){
+        if(entry.path().extension()!=".json"){
             continue;
         }
         std::filesystem::path relative=fs::relative(entry.path(), assets_dir);
-        fs::path output_path=output_dir / relative;
+        fs::path output_path=assets_dir / relative;
         output_path.replace_extension(".hpp");
         fs::create_directories(output_path.parent_path());
         try{
