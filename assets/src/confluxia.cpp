@@ -26,14 +26,14 @@ const vector<string> basic_powers={"fire","metal","wood","earth","water"};
 const vector<string> alignments={"light","dark"};
 const vector<string> cosmic_powers={"space","time"};
 const vector<string> stat_types={"speed","attack","defense","health"};
-struct move {
+struct move{
     string name;
     int damage;
     int cooldown;
     string type;
     string level;
 };
-struct pet {
+struct pet{
     string name;
     string type;
     string rarity;
@@ -41,28 +41,28 @@ struct pet {
     string move;
     string description;
 };
-unordered_map<string,move> load_moves() {
+unordered_map<string,move> load_moves(){
     unordered_map<string,move>result;
     json data=json::parse(confluxed_assets::moves);
-    for (const auto& [key,value]:data.items()){result[key]={value["name"],value["damage"],value["cooldown"],value["type"],value["level"]};}
+    for(const auto& [key,value]:data.items()){result[key]={value["name"],value["damage"],value["cooldown"],value["type"],value["level"]};}
     return(result);
 }
-unordered_map<string,pet> load_pets() {
+unordered_map<string,pet> load_pets(){
     unordered_map<string,pet>result;
     json data=json::parse(confluxed_assets::pets);
-    for (const auto& [key,value]:data.items()){result[key]={value["name"],value["type"],value["rarity"],value["buffed_stat"],value["move"],value["description"]};}
+    for(const auto& [key,value]:data.items()){result[key]={value["name"],value["type"],value["rarity"],value["buffed_stat"],value["move"],value["description"]};}
     return(result);
 }
-unordered_map<string,string> load_lore() {
+unordered_map<string,string> load_lore(){
     unordered_map<string,string> result;
     json data=json::parse(confluxed_assets::lore);
-    for (const auto& [id,value]:data.items()){result[id]=value;}
+    for(const auto& [id,value]:data.items()){result[id]=value;}
     return(result);
 }
-unordered_map<string,vector<string>> load_modifiers() {
+unordered_map<string,vector<string>> load_modifiers(){
     unordered_map<string,vector<string>>result;
     json data=json::parse(confluxed_assets::modifiers);
-    for (const auto& [id,value]:data.items()){result[id]=value;}
+    for(const auto& [id,value]:data.items()){result[id]=value;}
     return(result);
 }
 const unordered_map<string,move>moves=load_moves();
@@ -70,29 +70,29 @@ const unordered_map<string,pet>pets=load_pets();
 const unordered_map<string,string>lore_defs=load_lore();
 const unordered_map<string,vector<string>> modifiers=load_modifiers();
 void typeprint(string text){
-    for (size_t i=0,len=text.size();i<len;++i){
+    for(size_t i=0,len=text.size();i<len;++i){
         cout<<text[i]<<std::flush;
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 }
 string user_input(string prompt,vector<string>valid_options={}){
+    vector<string> printed_options=valid_options;
     while(true){
         string response;
         typeprint(prompt);
         typeprint(" ");
         if(!valid_options.empty()){
-            typeprint("(");
-            for(size_t i=0;i<valid_options.size()-1;i++) {
-                typeprint(valid_options[i]);
-                if(i<valid_options.size()-2) {
-                    typeprint(", ");
-                }
+            if(printed_options==vector<string>{"y/n"}){
+                valid_options={"yes","no","y","n"};
             }
-            typeprint(" or ");
-            typeprint(valid_options.back());
-            typeprint(") ");
+            typeprint("(");
+            for(size_t i=0;i<printed_options.size()-1;i++){
+                typeprint(printed_options[i]);
+                if(i<printed_options.size()-2){typeprint(", ");}
+            }
+            typeprint(" or "+printed_options.back()+") ");
         }
-        std::getline(cin, response);
+        std::getline(cin,response);
         string response_lower=response;
         std::transform(response_lower.begin(),response_lower.end(),response_lower.begin(),[](unsigned char c){return std::tolower(c);});
         if(!valid_options.empty()){
@@ -108,34 +108,41 @@ string user_input(string prompt,vector<string>valid_options={}){
             }
             if(!valid){
                 typeprint("Invalid input. Please choose ");
-                for(size_t i=0;i<valid_options.size()-1;i++) {
-                    typeprint(valid_options[i]);
-                    if(i<valid_options.size()-2) {
+                for(size_t i=0;i<printed_options.size()-1;i++){
+                    typeprint(printed_options[i]);
+                    if(i<printed_options.size()-2){
                         typeprint(", ");
                     }
                 }
-                typeprint(" or "+valid_options.back()+". ");
+                typeprint(" or "+printed_options.back()+". ");
             }else{
+                if(valid_options==vector<string>{"yes","no","y","n"}){
+                    if(response_lower=="y"){response="yes";}
+                    else if(response_lower=="n"){response="no";}
+                }
                 return(response);
             }
         }else{
-                return(response);
+            if(valid_options==vector<string>{"yes","no","y","n"}){
+                if(response_lower=="y"){response="yes";}
+                else if(response_lower=="n"){response="no";}
             }
-        
+            return(response);
+        }
     }
 }
-struct stat_block {
+struct stat_block{
     int speed;
     int attack;
     int defense;
     int health;
 };
-struct power_construct {
+struct power_construct{
     string basic;
     string alignment;
     string cosmic;
 };
-struct enemy {
+struct enemy{
     string name;
     stat_block stats;
     power_construct powers;
@@ -144,7 +151,7 @@ struct enemy {
     unordered_map<string,int>cooldown_times={};
     power_construct memory;
 };
-struct player {
+struct player{
     string name;
     int rare_traits=0;
     unordered_map<string,int>cooldown_times={};
@@ -152,10 +159,10 @@ struct player {
     vector<string> pets;
     stat_block stats{10,10,10,100};
     power_construct powers;
-    player() {
+    player(){
         name=user_input("What would you like to name your character?");
-        bool randomize=user_input("Would you like to randomize your character's stats and powers?",{"yes","no"})=="yes";
-        if (randomize) {
+        bool randomize=user_input("Would you like to randomize your character's stats and powers?",{"y/n"})=="yes";
+        if(randomize){
             vector<string> basic_options={"fire","metal","wood","earth","water","fire","metal","wood","earth","water","nexus"};
             std::uniform_int_distribution<size_t> basic_dist(0,basic_options.size()-1);
             powers.basic=basic_options[basic_dist(gen)];
@@ -185,9 +192,9 @@ struct player {
         index=cosmic_it-cosmic_powers.begin();
         if(index<cosmic_starter_moves.size()){known_moves.push_back(cosmic_starter_moves[index]);} 
         else{known_moves.insert(known_moves.end(),cosmic_starter_moves.begin(),cosmic_starter_moves.end());}
-        if (powers.basic=="nexus"){rare_traits++;}
-        if (powers.alignment=="objectivity"){rare_traits++;}
-        if (powers.cosmic=="axiom"){rare_traits++;}
+        if(powers.basic=="nexus"){rare_traits++;}
+        if(powers.alignment=="objectivity"){rare_traits++;}
+        if(powers.cosmic=="axiom"){rare_traits++;}
     }
 };
 string get_lore(const player&player){
@@ -248,7 +255,7 @@ int get_damage(const bool apply_cooldown,unordered_map<string,int>& attacker_coo
     else if(moves.at(attacking_move).level=="alignment"){lvlmod=3;}
     else if(moves.at(attacking_move).level=="cosmic"){lvlmod=4;}
     else{throw(std::invalid_argument("No move level found"));}
-    if (find(modifiers.at(attack_type).begin(),modifiers.at(attack_type).end(),defender_type)!=modifiers.at(attack_type).end()){damage_multipliernum=lvlmod;}
+    if(find(modifiers.at(attack_type).begin(),modifiers.at(attack_type).end(),defender_type)!=modifiers.at(attack_type).end()){damage_multipliernum=lvlmod;}
     else if(find(modifiers.at(defender_type).begin(),modifiers.at(defender_type).end(),attack_type)!=modifiers.at(defender_type).end()){damage_multiplierden=lvlmod;}
     if(apply_cooldown){attacker_cooldown_times[attacking_move]=moves.at(attacking_move).cooldown;}
     return(static_cast<int>(std::round(static_cast<double>(moves.at(attacking_move).damage)*static_cast<double>(attacker_stats.attack)/static_cast<double>(attackee_stats.defense)*static_cast<double>(damage_multipliernum)/static_cast<double>(damage_multiplierden))));
@@ -263,7 +270,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
             for(size_t i=0;i<player.known_moves.size();++i){if(player.cooldown_times.find(player.known_moves[i])==player.cooldown_times.end()){available_moves.push_back(player.known_moves[i]);}}
             if(action=="see moves"){
                 typeprint("You can use the following moves: \n");
-                for (size_t i=0;i<available_moves.size();++i){
+                for(size_t i=0;i<available_moves.size();++i){
                     string cooldown;
                     if(moves.at(available_moves[i]).cooldown==1){cooldown="no";}
                     else{cooldown=std::to_string(moves.at(available_moves[i]).cooldown-1)+"-turn";}
@@ -276,7 +283,8 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
                 for(const auto& pair:move_lookup){available_move_names.push_back(pair.first);}
                 string move_to_use=user_input("What move would you like to use?",{available_move_names});
                 string move_to_use_id=move_lookup[move_to_use];
-                enemy.stats.health-=get_damage(true,player.cooldown_times,player.stats,enemy.stats,enemy.powers,move_to_use_id);
+                int damage=get_damage(true,player.cooldown_times,player.stats,enemy.stats,enemy.powers,move_to_use_id);
+                enemy.stats.health-=damage;
                 if(moves.at(move_to_use_id).level=="basic"){
                     if(enemy.memory.basic!=moves.at(move_to_use_id).type&&enemy.memory.basic!="nexus"){
                         if(enemy.memory.basic==""){enemy.memory.basic=moves.at(move_to_use_id).type;}
@@ -293,12 +301,12 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
                         else{enemy.memory.cosmic="axiom";}
                     }
                 }
-                typeprint("You used "+moves.at(move_to_use_id).name+" and dealt "+std::to_string(get_damage(false,player.cooldown_times,player.stats,enemy.stats,enemy.powers,move_to_use_id))+" damage to Bob! \n");
+                typeprint("You used "+moves.at(move_to_use_id).name+" and dealt "+std::to_string(damage)+" damage to Bob! \n");
             }
         }
-        for (auto it=player.cooldown_times.begin();it!=player.cooldown_times.end();){
+        for(auto it=player.cooldown_times.begin();it!=player.cooldown_times.end();){
             it->second--;
-            if (it->second<=0){it=player.cooldown_times.erase(it);}
+            if(it->second<=0){it=player.cooldown_times.erase(it);}
             else{it++;}
         }
     }else{
@@ -321,15 +329,15 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
             else if(moves.at(best_move).level=="alignment"){enemy.memory.alignment=player.powers.alignment;}
             else if(moves.at(best_move).level=="cosmic"){enemy.memory.cosmic=player.powers.cosmic;}
         }
-        for (auto it=enemy.cooldown_times.begin();it!=enemy.cooldown_times.end();){
+        for(auto it=enemy.cooldown_times.begin();it!=enemy.cooldown_times.end();){
             it->second--;
-            if (it->second<=0){it=enemy.cooldown_times.erase(it);}
+            if(it->second<=0){it=enemy.cooldown_times.erase(it);}
             else{it++;}
         }
     }
     return !turn;
 }
-int main() {
+int main(){
     typeprint("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
     player player;
     typeprint(player.name+" has been created with the following stats: \n");
@@ -347,7 +355,7 @@ int main() {
     std::uniform_int_distribution<size_t> cosmic_dist(0,cosmic_powers.size()-1);
     bob.powers.cosmic=cosmic_powers[cosmic_dist(gen)];
     std::bernoulli_distribution randbool(0.5);
-    for (const auto& [id,val]:moves){
+    for(const auto& [id,val]:moves){
         if(val.type==bob.powers.basic||val.type==bob.powers.alignment||val.type==bob.powers.cosmic){
             if(randbool(gen)){
                 bob.known_moves.push_back(id);
@@ -355,7 +363,7 @@ int main() {
         }
     }
     if(bob.known_moves.empty()){
-        for (const auto& [id,val]:moves) {
+        for(const auto& [id,val]:moves){
             if(val.type==bob.powers.basic||val.type==bob.powers.alignment||val.type==bob.powers.cosmic){
                 bob.known_moves.push_back(id);
             }
