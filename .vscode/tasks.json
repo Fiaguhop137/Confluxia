@@ -4,7 +4,7 @@
         {
             "label": "Run Confluxia",
             "type": "shell",
-            "command": "./build.sh && clear && ./confluxia.exe",
+            "command": "./build.sh && clear && ./confluxia",
             "problemMatcher": []
         }
     ]
