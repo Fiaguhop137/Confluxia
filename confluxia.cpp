@@ -56,7 +56,7 @@ const unordered_map<string,vector<string>> modifiers=load_modifiers();
 void typeprint(string text){
     for (size_t i=0,len=text.size();i<len;++i){
         cout<<text[i];
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 string user_input(string prompt,vector<string>valid_options={}){
