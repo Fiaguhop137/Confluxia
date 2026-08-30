@@ -4,7 +4,7 @@
         {
             "label": "Run Confluxia",
             "type": "shell",
-            "command": "git sync && g++ -std=c++23 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -fdiagnostics-color=always confluxia.cpp -o confluxia && clear && ./confluxia",
+            "command": "./build.sh && clear && ./confluxia",
             "problemMatcher": []
         }
     ]
