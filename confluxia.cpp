@@ -272,7 +272,7 @@ bool battle_loop(bool turn,player& player,enemy& enemy){
                         else{enemy.memory.cosmic="axiom";}
                     }
                 }
-                typeprint("You used "+moves.at(move_to_use_id).name+" and dealt "+std::to_string(moves.at(move_to_use_id).damage)+" damage to Bob! \n");
+                typeprint("You used "+moves.at(move_to_use_id).name+" and dealt "+std::to_string(get_damage(false,player.cooldown_times,player.stats,enemy.stats,enemy.powers,move_to_use_id))+" damage to Bob! \n");
             }
         }
         for (auto it=player.cooldown_times.begin();it!=player.cooldown_times.end();){
@@ -348,9 +348,9 @@ int main() {
         else if(player.stats.health<=0){typeprint("You have been defeated by Bob. \n");}
         else{
             if(static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health>0.0){
-                typeprint("Bob has "+std::to_string(std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100)+"% more health than you. \n");
+                typeprint("Bob has "+std::to_string(static_cast<int>(std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100))+"% more health than you. \n");
             }else if(static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health<0.0){
-                typeprint("Bob has "+std::to_string(-std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100)+"% less health than you. \n");
+                typeprint("Bob has "+std::to_string(static_cast<int>(0-std::round((static_cast<double>(bob.stats.health-player.stats.health)/player.stats.health)*10000)/100))+"% less health than you. \n");
             }else{
                 typeprint("Bob has the same health as you. \n");
             }
