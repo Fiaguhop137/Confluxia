@@ -90,7 +90,8 @@ string input(string prompt,vector<string>valid_options={}){
                 print(printed_options[i]);
                 if(i<printed_options.size()-2){print(", ");}
             }
-            print(" or "+printed_options.back()+") ");
+            if(printed_options.size()>1){print(" or ");}
+            print(printed_options.back()+") ");
         }
         std::getline(cin,response);
         string response_lower=response;
