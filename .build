@@ -1,20 +1,23 @@
 #!/bin/bash
 set -e
 bar=("⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷")
-cosmoc++ -std=c++23 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -fdiagnostics-color=always ./assets/src/confluxia.cpp -o ./tmp && x86_64-w64-mingw32-g++-posix ./assets/src/confluxia.cpp -o Confluxia.exe &
+cosmoc++ -std=c++23 -O3 -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -fdiagnostics-color=always ./assets/src/confluxia.cpp -o ./tmp && x86_64-w64-mingw32-g++-posix -std=c++23 -O3 -w ./assets/src/confluxia.cpp -o ./Confluxia.exe &
 pid=$!
 while kill -0 "$pid" 2>/dev/null; do
     for i in {0..7}; do
         if ! kill -0 "$pid" 2>/dev/null; then
             break
         fi
-        printf '\r%s] Compiling Confluxia...' "[${bar[$i]}"
+        printf '\r[%s] Compiling Confluxia...' "${bar[$i]}"
         sleep 0.125
     done
 done
-wait "$pid"
+if ! wait "$pid"; then
+    printf '[Error] Compilation failed. \n'
+    exit 1
+fi
 printf '\r\033[2K'
-printf '[Success] Compiled Confluxia!\n'
+printf '[Success] Compiled Confluxia! \n'
 rm -f ./tmp.aarch64.elf
 rm -f ./tmp.com.dbg
 mv ./tmp ./Confluxia.com
