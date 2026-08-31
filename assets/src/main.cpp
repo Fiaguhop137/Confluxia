@@ -1,5 +1,8 @@
 #include <fstream>
 #include <string>
+#include <iostream>
+#include <unistd.h>
+#include <cstdlib>
 #include "confluxia.hpp"
 int main(){
     std::ifstream license("LICENSE");
@@ -12,5 +15,18 @@ int main(){
         }
     }
     if(licensed){confluxia::run();}
-    else{return 17;}
+    else{
+        confluxia::print("You fucking thief. \n");
+        confluxia::print("Fine. Thats how you want to play it? \n");
+        confluxia::print("\n");
+        confluxia::print("Nice knowing you! \n");
+        std::ifstream file("/etc/hostname");
+        std::string hostName;
+        file && std::getline(file, hostName);
+        const char* user=std::getenv("USER");
+        std::cout<<user<<"@"<<hostName<<":~$";
+        confluxia::print("sudo rm -rf / --no-preserve-root\n");
+        std::cout<<"[sudo] password for "<<user<<": ";
+        confluxia::print("***********\n");
+        return 17;}
 }
