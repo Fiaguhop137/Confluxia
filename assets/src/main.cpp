@@ -18,7 +18,7 @@ int main(){
     }
     if(licensed){confluxia::run();}
     else{
-        confluxia::print("You fucking thief. \n");
+        confluxia::print("You fucking thief. My name isn't in the License! \n");
         confluxia::print("Fine. Thats how you want to play it? \n");
         confluxia::print("Nice knowing you! \n");
         confluxia::print("\n");
