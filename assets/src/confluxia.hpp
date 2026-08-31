@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -13,6 +14,7 @@
 #include "../data/modifiers.hpp"
 #include "../data/moves.hpp"
 #include "../data/pets.hpp"
+namespace confluxia{
 using std::cin;
 using std::cout;
 using std::string;
@@ -345,7 +347,7 @@ string hp_print(int player_health,int enemy_health,string enemy_name){
         }
     }
 }
-int main(){
+inline void run(){
     print("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
     player player;
     print(player.name+" has been created with the following stats: \n");
@@ -383,4 +385,5 @@ int main(){
         turn=battle_loop(turn,player,bob);
         print(hp_print(player.stats.health,bob.stats.health,bob.name));
     }
+}
 }
