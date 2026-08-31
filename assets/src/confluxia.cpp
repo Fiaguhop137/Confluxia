@@ -9,12 +9,10 @@
 #include <random>
 #include <chrono>
 #include <thread>
-#include "../data/json.hpp"
 #include "../data/lore.hpp"
 #include "../data/modifiers.hpp"
 #include "../data/moves.hpp"
 #include "../data/pets.hpp"
-using json=nlohmann::json;
 using std::cin;
 using std::cout;
 using std::string;
@@ -41,28 +39,24 @@ struct pet{
     string move;
     string description;
 };
-unordered_map<string,move> load_moves(){
-    unordered_map<string,move>result;
-    json data=json::parse(confluxed_assets::moves);
-    for(const auto& [key,value]:data.items()){result[key]={value["name"],value["damage"],value["cooldown"],value["type"],value["level"]};}
+unordered_map<string,move> load_moves() {
+    unordered_map<string,move> result;
+    for(const auto& data:confluxed_assets::moves){result.emplace(string(data.id),move{string(data.name),data.damage,data.cooldown,string(data.type),string(data.level)});}
     return(result);
 }
-unordered_map<string,pet> load_pets(){
-    unordered_map<string,pet>result;
-    json data=json::parse(confluxed_assets::pets);
-    for(const auto& [key,value]:data.items()){result[key]={value["name"],value["type"],value["rarity"],value["buffed_stat"],value["move"],value["description"]};}
+unordered_map<string, pet> load_pets() {
+    unordered_map<string, pet> result;
+    for(const auto& data:confluxed_assets::pets){result.emplace(string(data.id),pet{string(data.name),string(data.type),string(data.rarity),data.buffed_stat,string(data.move),string(data.description)});}
     return(result);
 }
-unordered_map<string,string> load_lore(){
-    unordered_map<string,string> result;
-    json data=json::parse(confluxed_assets::lore);
-    for(const auto& [id,value]:data.items()){result[id]=value;}
+unordered_map<string, string> load_lore() {
+    unordered_map<string, string> result;
+    for(const auto& data:confluxed_assets::lore){result.emplace(string(data.id),string(data.text));}
     return(result);
 }
-unordered_map<string,vector<string>> load_modifiers(){
-    unordered_map<string,vector<string>>result;
-    json data=json::parse(confluxed_assets::modifiers);
-    for(const auto& [id,value]:data.items()){result[id]=value;}
+unordered_map<string, vector<string>> load_modifiers() {
+    unordered_map<string, vector<string>> result;
+    for(const auto& data:confluxed_assets::modifiers){result[string(data.id)]=vector<string>(data.targets.begin(),data.targets.end());}
     return(result);
 }
 const unordered_map<string,move>moves=load_moves();

@@ -1,235 +1,52 @@
 #pragma once
 #include <string_view>
-namespace confluxed_assets{inline constexpr std::string_view moves=R"JSON({
-    "flame_burst":{
-        "name":"Flame Burst",
-        "damage":10,
-        "cooldown":1,
-        "type":"fire",
-        "level":"basic"
-    },
-    "fireball":{
-        "name":"Fireball",
-        "damage":13,
-        "cooldown":2,
-        "type":"fire",
-        "level":"basic"
-    },
-    "heat_wave":{
-        "name":"Heat Wave",
-        "damage":17,
-        "cooldown":2,
-        "type":"fire",
-        "level":"basic"
-    },
-    "iron_spike":{
-        "name":"Iron Spike",
-        "damage":10,
-        "cooldown":1,
-        "type":"metal",
-        "level":"basic"
-    },
-    "shard_spray":{
-        "name":"Shard Spray",
-        "damage":15,
-        "cooldown":4,
-        "type":"metal",
-        "level":"basic"
-    },
-    "knife_storm":{
-        "name":"Knife Storm",
-        "damage":15,
-        "cooldown":4,
-        "type":"metal",
-        "level":"basic"
-    },
-    "splinter":{
-        "name":"Splinter",
-        "damage":10,
-        "cooldown":1,
-        "type":"wood",
-        "level":"basic"
-    },
-    "vine_whip":{
-        "name":"Vine Whip",
-        "damage":12,
-        "cooldown":2,
-        "type":"wood",
-        "level":"basic"
-    },
-    "leaf_storm":{
-        "name":"Leaf Storm",
-        "damage":15,
-        "cooldown":3,
-        "type":"wood",
-        "level":"basic"
-    },
-    "pebble_shot":{
-        "name":"Pebble Shot",
-        "damage":10,
-        "cooldown":1,
-        "type":"earth",
-        "level":"basic"
-    },
-    "tremor":{
-        "name":"Tremor",
-        "damage":15,
-        "cooldown":2,
-        "type":"earth",
-        "level":"basic"
-    },
-    "boulder_crush":{
-        "name":"Boulder Crush",
-        "damage":20,
-        "cooldown":5,
-        "type":"earth",
-        "level":"basic"
-    },
-    "water_jet":{
-        "name":"Water Jet",
-        "damage":10,
-        "cooldown":1,
-        "type":"water",
-        "level":"basic"
-    },
-    "tidal_wave":{
-        "name":"Tidal Wave",
-        "damage":15,
-        "cooldown":2,
-        "type":"water",
-        "level":"basic"
-    },
-    "flood":{
-        "name":"Flood",
-        "damage":20,
-        "cooldown":5,
-        "type":"water",
-        "level":"basic"
-    },
-    "light_beam":{
-        "name":"Light Beam",
-        "damage":10,
-        "cooldown":1,
-        "type":"light",
-        "level":"alignment"
-    },
-    "solar_flare":{
-        "name":"Solar Flare",
-        "damage":15,
-        "cooldown":4,
-        "type":"light",
-        "level":"alignment"
-    },
-    "radiant_burst":{
-        "name":"Radiant Burst",
-        "damage":12,
-        "cooldown":3,
-        "type":"light",
-        "level":"alignment"
-    },
-    "photon_bolt":{
-        "name":"Photon Bolt",
-        "damage":20,
-        "cooldown":5,
-        "type":"light",
-        "level":"alignment"
-    },
-    "void_strike":{
-        "name":"Void Strike",
-        "damage":10,
-        "cooldown":1,
-        "type":"dark",
-        "level":"alignment"
-    },
-    "shadow_flux":{
-        "name":"Shadow Flux",
-        "damage":12,
-        "cooldown":3,
-        "type":"dark",
-        "level":"alignment"
-    },
-    "nightmare":{
-        "name":"Nightmare",
-        "damage":15,
-        "cooldown":4,
-        "type":"dark",
-        "level":"alignment"
-    },
-    "eclipse":{
-        "name":"Eclipse",
-        "damage":20,
-        "cooldown":6,
-        "type":"dark",
-        "level":"alignment"
-    },
-    "space_rift":{
-        "name":"Space Rift",
-        "damage":10,
-        "cooldown":1,
-        "type":"space",
-        "level":"cosmic"
-    },
-    "gravity_well":{
-        "name":"Gravity Well",
-        "damage":15,
-        "cooldown":4,
-        "type":"space",
-        "level":"cosmic"
-    },
-    "space_wormhole":{
-        "name":"Spatial Wormhole",
-        "damage":20,
-        "cooldown":5,
-        "type":"space",
-        "level":"cosmic"
-    },
-    "singularity":{
-        "name":"Singularity",
-        "damage":25,
-        "cooldown":6,
-        "type":"space",
-        "level":"cosmic"
-    },
-    "galactic_strike":{
-        "name":"Galactic Strike",
-        "damage":17,
-        "cooldown":3,
-        "type":"space",
-        "level":"cosmic"
-    },
-    "chronic_chakram":{
-        "name":"Chronic Chakram",
-        "damage":10,
-        "cooldown":1,
-        "type":"time",
-        "level":"cosmic"
-    },
-    "temporal_loop":{
-        "name":"Temporal Loop",
-        "damage":19,
-        "cooldown":3,
-        "type":"time",
-        "level":"cosmic"
-    },
-    "time_wormhole":{
-        "name":"Temporal Wormhole",
-        "damage":20,
-        "cooldown":5,
-        "type":"time",
-        "level":"cosmic"
-    },
-    "fortune":{
-        "name":"Fortune",
-        "damage":13,
-        "cooldown":3,
-        "type":"time",
-        "level":"cosmic"
-    },
-    "destiny":{
-        "name":"Destiny",
-        "damage":16,
-        "cooldown":3,
-        "type":"time",
-        "level":"cosmic"
-        }
-})JSON";}
+#include <vector>
+
+namespace confluxed_assets {
+
+struct move_data {
+    std::string_view id;
+    std::string_view name;
+    int damage;
+    int cooldown;
+    std::string_view type;
+    std::string_view level;
+};
+
+inline const std::vector<move_data> moves = {
+    {"flame_burst", "Flame Burst", 10, 1, "fire", "basic"},
+    {"fireball", "Fireball", 13, 2, "fire", "basic"},
+    {"heat_wave", "Heat Wave", 17, 2, "fire", "basic"},
+    {"iron_spike", "Iron Spike", 10, 1, "metal", "basic"},
+    {"shard_spray", "Shard Spray", 15, 4, "metal", "basic"},
+    {"knife_storm", "Knife Storm", 15, 4, "metal", "basic"},
+    {"splinter", "Splinter", 10, 1, "wood", "basic"},
+    {"vine_whip", "Vine Whip", 12, 2, "wood", "basic"},
+    {"leaf_storm", "Leaf Storm", 15, 3, "wood", "basic"},
+    {"pebble_shot", "Pebble Shot", 10, 1, "earth", "basic"},
+    {"tremor", "Tremor", 15, 2, "earth", "basic"},
+    {"boulder_crush", "Boulder Crush", 20, 5, "earth", "basic"},
+    {"water_jet", "Water Jet", 10, 1, "water", "basic"},
+    {"tidal_wave", "Tidal Wave", 15, 2, "water", "basic"},
+    {"flood", "Flood", 20, 5, "water", "basic"},
+    {"light_beam", "Light Beam", 10, 1, "light", "alignment"},
+    {"solar_flare", "Solar Flare", 15, 4, "light", "alignment"},
+    {"radiant_burst", "Radiant Burst", 12, 3, "light", "alignment"},
+    {"photon_bolt", "Photon Bolt", 20, 5, "light", "alignment"},
+    {"void_strike", "Void Strike", 10, 1, "dark", "alignment"},
+    {"shadow_flux", "Shadow Flux", 12, 3, "dark", "alignment"},
+    {"nightmare", "Nightmare", 15, 4, "dark", "alignment"},
+    {"eclipse", "Eclipse", 20, 6, "dark", "alignment"},
+    {"space_rift", "Space Rift", 10, 1, "space", "cosmic"},
+    {"gravity_well", "Gravity Well", 15, 4, "space", "cosmic"},
+    {"space_wormhole", "Spatial Wormhole", 20, 5, "space", "cosmic"},
+    {"singularity", "Singularity", 25, 6, "space", "cosmic"},
+    {"galactic_strike", "Galactic Strike", 17, 3, "space", "cosmic"},
+    {"chronic_chakram", "Chronic Chakram", 10, 1, "time", "cosmic"},
+    {"temporal_loop", "Temporal Loop", 19, 3, "time", "cosmic"},
+    {"time_wormhole", "Temporal Wormhole", 20, 5, "time", "cosmic"},
+    {"fortune", "Fortune", 13, 3, "time", "cosmic"},
+    {"destiny", "Destiny", 16, 3, "time", "cosmic"},
+};
+
+}
