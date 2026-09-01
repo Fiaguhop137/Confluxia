@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 bar=("⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷")
-cosmoc++ -std=c++23 -O0 -g ./assets/src/main.cpp -o ./.tmp && x86_64-w64-mingw32-g++-posix -std=c++23 -O3 -w ./assets/src/main.cpp -o ./Confluxia.exe &
+cosmoc++ -std=c++23 -O0 -g ./assets/src/main.cpp -o ./.tmp &
 pid=$!
 while kill -0 "$pid" 2>/dev/null; do
     for i in {0..7}; do
