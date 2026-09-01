@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
-#include "confluxia.hpp"
+#include "desktop.hpp"
 constexpr int get_platform(){
     #if defined(__EMSCRIPTEN__)
         return 0;
@@ -26,21 +26,10 @@ int main(){
         }
     }
     if(licensed){
-        std::cout<<std::to_string(get_platform());
-        confluxia::run();
+        if(get_platform()==0){std::cout<<"Web browser not yet supported. \n";}
+        else if(get_platform()==1){std::cout<<"Android not yet supported. \n";}
+        else if(get_platform()==2){desktop::run();}
     }else{
-        confluxia::print("You fucking thief. My name isn't in the License! \n");
-        confluxia::print("Fine. Thats how you want to play it? \n");
-        confluxia::print("Nice knowing you! \n");
-        confluxia::print("\n");
-        std::ifstream file("/etc/hostname");
-        std::string hostName;
-        file && std::getline(file, hostName);
-        const char* user=std::getenv("USER");
-        std::cout<<user<<"@"<<hostName<<":~$ ";
-        confluxia::print("sudo rm -rf / --no-preserve-root\n");
-        std::cout<<"[sudo] password for "<<user<<": ";
-        confluxia::print("***********\n");
-        std::this_thread::sleep_for(std::chrono::milliseconds(30000));
+        std::cout<<"The license for this software is missing or has been modified. Please use the original license file to run confluxia. \n";
         return 17;}
 }

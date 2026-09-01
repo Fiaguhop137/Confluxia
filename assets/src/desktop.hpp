@@ -14,12 +14,12 @@
 #include "../data/modifiers.hpp"
 #include "../data/moves.hpp"
 #include "../data/pets.hpp"
-namespace confluxia{
-    using std::cin;
-    using std::cout;
-    using std::string;
-    using std::vector;
-    using std::unordered_map;
+using std::cin;
+using std::cout;
+using std::string;
+using std::vector;
+using std::unordered_map;
+namespace desktop{
     std::random_device rd;
     std::mt19937 gen(rd());
     const vector<string> basic_powers={"fire","metal","wood","earth","water"};
