@@ -26,10 +26,12 @@ int main(){
         }
     }
     if(licensed){
-        if(get_platform()==0){std::cout<<"Web browser not yet supported. \n";}
-        else if(get_platform()==1){std::cout<<"Android not yet supported. \n";}
-        else if(get_platform()==2){desktop::run();}
+        int platform=get_platform();
+        if(platform==0){std::cout<<"Web browser not yet supported. \n";}
+        else if(platform==1){std::cout<<"Android not yet supported. \n";}
+        else{desktop::run();}
     }else{
         std::cout<<"The license for this software is missing or has been modified. Please use the original license file to run confluxia. \n";
-        return 17;}
+        return 402;
+    }
 }
