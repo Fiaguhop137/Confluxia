@@ -1,12 +1,12 @@
 #pragma once
-#include <string>
+#include <string_view>
 #include <vector>
 
 namespace confluxed_assets {
 
 struct modifier_data {
-    std::string id;
-    std::vector<std::string> targets;
+    std::string_view id;
+    std::vector<std::string_view> targets;
 };
 
 inline const std::vector<modifier_data> modifiers = {
