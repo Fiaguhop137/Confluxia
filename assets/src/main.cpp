@@ -6,14 +6,13 @@
 #include <chrono>
 #include <thread>
 #include "confluxia.hpp"
-enum class platform{wasm,android,desktop};
-constexpr platform get_platform(){
+constexpr int get_platform(){
     #if defined(__EMSCRIPTEN__)
-        return platform::wasm;
+        return 0;
     #elif defined(__ANDROID__)
-        return platform::android;
+        return 1;
     #else
-        return platform::desktop;
+        return 2;
     #endif
 }
 int main(){
@@ -27,7 +26,7 @@ int main(){
         }
     }
     if(licensed){
-        std::cout<<std::to_string(static_cast<int>(get_platform()));
+        std::cout<<std::to_string(get_platform());
         confluxia::run();
     }else{
         confluxia::print("You fucking thief. My name isn't in the License! \n");
