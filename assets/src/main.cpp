@@ -1,22 +1,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include <unistd.h>
-#include <cstdlib>
-#include <chrono>
-#include <thread>
-#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
 #include "desktop.hpp"
-#endif
-constexpr int get_platform(){
-    #if defined(__EMSCRIPTEN__)
-        return 0;
-    #elif defined(__ANDROID__)
-        return 1;
-    #else
-        return 2;
-    #endif
-}
 int main(){
     std::ifstream license("LICENSE");
     std::string line;
@@ -28,10 +13,7 @@ int main(){
         }
     }
     if(licensed){
-        int platform=get_platform();
-        if(platform==0){std::cout<<"Web browser not yet supported. \n";}
-        else if(platform==1){std::cout<<"Android not yet supported. \n";}
-        else{desktop::run();}
+        desktop::run();
     }else{
         std::cout<<"The license for this software is missing or has been modified. Please use the original license file to run confluxia. \n";
         return 402;

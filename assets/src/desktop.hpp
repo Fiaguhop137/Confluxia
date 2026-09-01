@@ -25,7 +25,6 @@ namespace desktop{
     const vector<string> basic_powers={"fire","metal","wood","earth","water"};
     const vector<string> alignments={"light","dark"};
     const vector<string> cosmic_powers={"space","time"};
-    const vector<string> stat_types={"speed","attack","defense","health"};
     struct move{
         string name;
         int damage;
@@ -46,17 +45,17 @@ namespace desktop{
         for(const auto& data:confluxed_assets::moves){result.emplace(string(data.id),move{string(data.name),data.damage,data.cooldown,string(data.type),string(data.level)});}
         return(result);
     }
-    unordered_map<string, pet> load_pets() {
+    unordered_map<string,pet> load_pets() {
         unordered_map<string, pet> result;
         for(const auto& data:confluxed_assets::pets){result.emplace(string(data.id),pet{string(data.name),string(data.type),string(data.rarity),data.buffed_stat,string(data.move),string(data.description)});}
         return(result);
     }
-    unordered_map<string, string> load_lore() {
+    unordered_map<string,string> load_lore() {
         unordered_map<string, string> result;
         for(const auto& data:confluxed_assets::lore){result.emplace(string(data.id),string(data.text));}
         return(result);
     }
-    unordered_map<string, vector<string>> load_modifiers() {
+    unordered_map<string,vector<string>> load_modifiers() {
         unordered_map<string, vector<string>> result;
         for(const auto& data:confluxed_assets::modifiers){result[string(data.id)]=vector<string>(data.targets.begin(),data.targets.end());}
         return(result);
