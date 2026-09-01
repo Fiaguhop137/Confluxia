@@ -347,7 +347,7 @@ namespace confluxia{
             }
         }
     }
-    inline void run(){
+    void run(){
         print("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
         player player;
         print(player.name+" has been created with the following stats: \n");
