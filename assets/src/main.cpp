@@ -5,7 +5,9 @@
 #include <cstdlib>
 #include <chrono>
 #include <thread>
+#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
 #include "desktop.hpp"
+#endif
 constexpr int get_platform(){
     #if defined(__EMSCRIPTEN__)
         return 0;
