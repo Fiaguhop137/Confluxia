@@ -9,7 +9,7 @@ while kill -0 "$pid" 2>/dev/null; do
         if ! kill -0 "$pid" 2>/dev/null; then
             break
         fi
-        printf '\r[%s] Compiling Confluxia...' "${bar[$i]}"
+        printf '\r[%s] ['$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")'] Compiling Confluxia...' "${bar[$i]}"
         sleep 0.125
     done
 done
@@ -17,8 +17,7 @@ if ! wait "$pid"; then
     printf '[Error] Compilation failed. \n'
     exit 1
 fi
-end=$(date +%s.%N)
-elapsed=$(awk "BEGIN {printf \"%.2f\", $end - $start}")
+elapsed=$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")
 printf '\r\033[2K'
 printf '[Success] Compiled Confluxia in %ss! \n' "$elapsed"
 rm -f ./.tmp.aarch64.elf
