@@ -308,11 +308,8 @@ namespace desktop{
         }else{
             for(size_t i=0;i<enemy.known_moves.size();++i){if(enemy.cooldown_times.find(enemy.known_moves[i])==enemy.cooldown_times.end()){available_moves.push_back(enemy.known_moves[i]);}}
             string best_move;
-            try{
+            if(!available_moves.empty()){
                 best_move=available_moves[0];
-            }catch(const std::out_of_range&){
-                print(enemy.name+" has no available moves and cannot attack this turn. \n");
-                return !turn;
             }
             int best_damage=0;
             for(const auto& move_id:available_moves){

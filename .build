@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 bar=("⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷")
+start=$(date +%s.%N)
 cosmoc++ -std=c++23 -O0 -g ./assets/src/main.cpp -o ./.tmp &
 pid=$!
 while kill -0 "$pid" 2>/dev/null; do
@@ -16,8 +17,10 @@ if ! wait "$pid"; then
     printf '[Error] Compilation failed. \n'
     exit 1
 fi
+end=$(date +%s.%N)
+elapsed=$(awk "BEGIN {printf \"%.2f\", $end - $start}")
 printf '\r\033[2K'
-printf '[Success] Compiled Confluxia! \n'
+printf '[Success] Compiled Confluxia in %ss! \n' "$elapsed"
 rm -f ./.tmp.aarch64.elf
 rm -f ./.tmp.com.dbg
 mv ./.tmp ./Confluxia.com
