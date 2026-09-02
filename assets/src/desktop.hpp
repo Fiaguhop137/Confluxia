@@ -46,17 +46,17 @@ namespace desktop{
         return(result);
     }
     unordered_map<string,pet> load_pets() {
-        unordered_map<string, pet> result;
+        unordered_map<string,pet> result;
         for(const auto& data:confluxed_assets::pets){result.emplace(string(data.id),pet{string(data.name),string(data.type),string(data.rarity),data.buffed_stat,string(data.move),string(data.description)});}
         return(result);
     }
     unordered_map<string,string> load_lore() {
-        unordered_map<string, string> result;
+        unordered_map<string,string> result;
         for(const auto& data:confluxed_assets::lore){result.emplace(string(data.id),string(data.text));}
         return(result);
     }
     unordered_map<string,vector<string>> load_modifiers() {
-        unordered_map<string, vector<string>> result;
+        unordered_map<string,vector<string>> result;
         for(const auto& data:confluxed_assets::modifiers){result[string(data.id)]=vector<string>(data.targets.begin(),data.targets.end());}
         return(result);
     }
@@ -174,17 +174,17 @@ namespace desktop{
                 powers.cosmic=input("What would you like your character's cosmic power to be?",cosmic_powers);
             }
             std::vector<std::string> basic_starter_moves={"flame_burst", "iron_spike", "splinter", "pebble_shot", "water_jet"};
-            auto basic_it=std::find(basic_powers.begin(),basic_powers.end(),powers.basic);
+            auto basic_it=find(basic_powers.begin(),basic_powers.end(),powers.basic);
             size_t index=basic_it-basic_powers.begin();
             if(index<basic_starter_moves.size()){known_moves.push_back(basic_starter_moves[index]);} 
             else{known_moves.insert(known_moves.end(),basic_starter_moves.begin(),basic_starter_moves.end());}
             std::vector<std::string> alignment_starter_moves={"light_beam", "void_strike"};
-            auto alignment_it=std::find(alignments.begin(),alignments.end(),powers.alignment);
+            auto alignment_it=find(alignments.begin(),alignments.end(),powers.alignment);
             index=alignment_it-alignments.begin();
             if(index<alignment_starter_moves.size()){known_moves.push_back(alignment_starter_moves[index]);} 
             else{known_moves.insert(known_moves.end(),alignment_starter_moves.begin(),alignment_starter_moves.end());}
             std::vector<std::string> cosmic_starter_moves={"space_rift", "chronic_chakram"};
-            auto cosmic_it=std::find(cosmic_powers.begin(),cosmic_powers.end(),powers.cosmic);
+            auto cosmic_it=find(cosmic_powers.begin(),cosmic_powers.end(),powers.cosmic);
             index=cosmic_it-cosmic_powers.begin();
             if(index<cosmic_starter_moves.size()){known_moves.push_back(cosmic_starter_moves[index]);} 
             else{known_moves.insert(known_moves.end(),cosmic_starter_moves.begin(),cosmic_starter_moves.end());}
@@ -307,7 +307,13 @@ namespace desktop{
             }
         }else{
             for(size_t i=0;i<enemy.known_moves.size();++i){if(enemy.cooldown_times.find(enemy.known_moves[i])==enemy.cooldown_times.end()){available_moves.push_back(enemy.known_moves[i]);}}
-            string best_move=available_moves[0];
+            string best_move;
+            try{
+                best_move=available_moves[0];
+            }catch(const std::out_of_range&){
+                print(enemy.name+" has no available moves and cannot attack this turn. \n");
+                return !turn;
+            }
             int best_damage=0;
             for(const auto& move_id:available_moves){
                 int damage=get_damage(false,enemy.cooldown_times,enemy.stats,player.stats,enemy.memory,move_id);

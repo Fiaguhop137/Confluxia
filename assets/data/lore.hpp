@@ -5,7 +5,7 @@ namespace confluxed_assets{
         std::string_view id;
         std::string_view text;
     };
-    inline constexpr lore_data lore[]={
+    constexpr lore_data lore[]={
         {"fire","the power of flames and heat. You are able to control and manipulate flames, creating powerful attacks and defenses. You are also immune to fire and heat, allowing you to withstand extreme temperatures. You deal more damage to metal by melting it, but less to earth because it is not flammable. You have more defense against wood since you can't put out fire by adding fuel, but less protection from water because water can extinguish fire. "},
         {"metal","the power of strength and durability. You are able to control and manipulate metallic substances, creating powerful weapons and armor. You are also immune to metal-based attacks such as bullets and blades, allowing you to withstand physical damage. You deal more damage to wood by cutting it, but less to water because water can cause rust. You have more defense towards earth since you are heavier than it, but less protection from fire because fire can melt metal. "},
         {"wood","the power of growth and nature. You are able to control and manipulate plant life, creating powerful tools and structures. You are also immune to wood-based attacks, allowing you to withstand natural disasters. You deal more damage to earth since tree roots break up, penetrate, and bind soil together, but less to fire since you can't put out fire by adding fuel. You have more defense towards water because you drink water, but less protection from metal because metal can cut wood. "},

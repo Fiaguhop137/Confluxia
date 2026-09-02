@@ -10,7 +10,7 @@ namespace confluxed_assets{
         std::string_view type;
         std::string_view level;
     };
-    inline const std::vector<move_data> moves = {
+    const std::vector<move_data> moves={
         {"flame_burst","Flame Burst",10,1,"fire","basic"},
         {"fireball","Fireball",13,2,"fire","basic"},
         {"heat_wave","Heat Wave",17,2,"fire","basic"},

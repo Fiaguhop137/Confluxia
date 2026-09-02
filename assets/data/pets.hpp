@@ -11,7 +11,7 @@ namespace confluxed_assets{
         std::string_view move;
         std::string_view description;
     };
-    inline constexpr pet_data pets[]={
+    constexpr pet_data pets[]={
         {"flickerkit","Flickerkit","fire","common",0,"flame_burst","A cute kitten made of flickering flames."},
         {"emberpaw","Emberpaw","fire","uncommon",1,"fireball","A fiery rabbit whose glowing paws leave embers in every footprint."},
         {"plasmeow","Plasmeow","fire","rare",1,"heat_wave","A proud flame-maned lion that can turn a battlefield into a shimmering heat haze."},
@@ -46,5 +46,5 @@ namespace confluxed_assets{
         {"fatespinner","Fatespinner","time","epic",0,"fortune","A many-legged oracle that weaves glowing threads of possible futures."},
         {"destinarch","Destinarch","time","legendary",0,"destiny","An ageless guardian that watches the past and future unfold at once."},
     };
-    inline constexpr std::array<std::string_view,4> stat_types={"speed","attack","defense","health"};
+    constexpr std::array<std::string_view,4> stat_types={"speed","attack","defense","health"};
 }
