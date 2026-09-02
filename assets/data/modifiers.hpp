@@ -19,5 +19,6 @@ namespace confluxed_assets{
         {"space",{"time","axiom",""}},
         {"time",{"space","axiom",""}},
         {"axiom",{"space","time",""}},
+        {"",{}}
     };
 }
