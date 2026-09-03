@@ -157,6 +157,7 @@ namespace desktop{
         power_construct powers;
         player(){
             name=input("What would you like to name your character?");
+            print("Welcome, "+name+"! Let's get started.");
             bool randomize=input("Would you like to randomize your character's stats and powers?",{"y/n"})=="yes";
             if(randomize){
                 vector<string> basic_options={"fire","metal","wood","earth","water","fire","metal","wood","earth","water","nexus"};
@@ -381,11 +382,23 @@ namespace desktop{
                 }
             }
         }
-        bool turn=true;
-        print("You have encountered "+bob.name+"! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n");
-        while(player.stats.health>0&&bob.stats.health>0){
-            turn=battle_loop(turn,player,bob);
-            print(hp_print(player.stats.health,bob.stats.health,bob.name));
+        bool win=false;
+        while(!win){
+            bool turn=true;
+            print("You have encountered "+bob.name+"! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n");
+            while(player.stats.health>0&&bob.stats.health>0){
+                turn=battle_loop(turn,player,bob);
+                print(hp_print(player.stats.health,bob.stats.health,bob.name));
+            }
+            if(player.stats.health>0){print("Congratulations! You have won the battle! \n");win=true;}
+            else{print("You have lost the battle. ");}
+            player.stats.health=100;
+            bob.stats.health=100;
+            player.cooldown_times.clear();
+            bob.cooldown_times.clear();
+            if(input("Would you like to check out the pets? (y/n) ")=="yes"){
+                // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
+            }
         }
     }
 }
