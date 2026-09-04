@@ -157,7 +157,7 @@ namespace desktop{
         power_construct powers;
         player(){
             name=input("What would you like to name your character?");
-            print("Welcome, "+name+"! Let's get started.");
+            print("Welcome, "+name+"! Let's get started. \n");
             bool randomize=input("Would you like to randomize your character's stats and powers?",{"y/n"})=="yes";
             if(randomize){
                 vector<string> basic_options={"fire","metal","wood","earth","water","fire","metal","wood","earth","water","nexus"};
@@ -396,8 +396,10 @@ namespace desktop{
             bob.stats.health=100;
             player.cooldown_times.clear();
             bob.cooldown_times.clear();
-            if(input("Would you like to check out the pets? (y/n) ")=="yes"){
+            if(input("Would you like to check out the pets?",{"(y/n)"})=="yes"){
                 // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
+                // 50% rare pet, 30% uncommon, 20% common
+                
             }
         }
     }
