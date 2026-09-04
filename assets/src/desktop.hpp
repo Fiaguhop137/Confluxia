@@ -399,7 +399,7 @@ namespace desktop{
             if(input("Would you like to check out the pets?",{"(y/n)"})=="yes"){
                 // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
                 // 50% rare pet, 30% uncommon, 20% common
-                
+                print("You come across a few pets on your journey. \n");
             }
         }
     }
