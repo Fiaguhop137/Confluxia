@@ -103,14 +103,7 @@ namespace desktop{
                     }
                 }
                 if(!valid){
-                    print("Invalid input. Please choose ");
-                    for(size_t i=0;i<printed_options.size()-1;i++){
-                        print(printed_options[i]);
-                        if(i<printed_options.size()-2){
-                            print(", ");
-                        }
-                    }
-                    print(" or "+printed_options.back()+". ");
+                    print("Invalid input. Please choose a valid option. \n");
                 }else{
                     if(valid_options==vector<string>{"yes","no","y","n"}){
                         if(response_lower=="y"){response="yes";}
@@ -141,6 +134,7 @@ namespace desktop{
     struct enemy{
         string name;
         stat_block stats;
+        int bar;
         power_construct powers;
         vector<string> known_moves;
         vector<string> pets;
@@ -154,6 +148,7 @@ namespace desktop{
         vector<string> known_moves;
         vector<string> pets;
         stat_block stats{10,10,10,100};
+        int bar=0;
         power_construct powers;
         player(){
             name=input("What would you like to name your character?");
@@ -257,8 +252,26 @@ namespace desktop{
         if(apply_cooldown){attacker_cooldown_times[attacking_move]=moves.at(attacking_move).cooldown;}
         return(static_cast<int>(std::round(static_cast<double>(moves.at(attacking_move).damage)*static_cast<double>(attacker_stats.attack)/static_cast<double>(attackee_stats.defense)*static_cast<double>(damage_multipliernum)/static_cast<double>(damage_multiplierden))));
     }
-    bool battle_loop(bool turn,player& player,enemy& enemy){
+    void battle_loop(player& player,enemy& enemy){
+        int bar=std::max(player.stats.speed,enemy.stats.speed);
+        bool turn;
         vector<string> available_moves;
+        player.bar+=player.stats.speed;
+        enemy.bar+=enemy.stats.speed;
+        bool dbar=false;
+        while(player.bar>=bar&&enemy.bar>=bar){
+            player.bar-=bar;
+            enemy.bar-=bar;
+            dbar=true;
+        }
+        if(dbar){
+            if (player.bar>=enemy.bar){turn=true;}
+            else{turn=false;}
+        }else{
+            if(player.bar>=bar){turn=true;}
+            else if(enemy.bar>=bar){turn=false;}
+            else{turn=player.stats.speed>=enemy.stats.speed;}
+        }
         if(turn){
             string action="see moves";
             while(action=="see moves"){
@@ -335,7 +348,6 @@ namespace desktop{
                 else{it++;}
             }
         }
-        return !turn;
     }
     string hp_print(int player_health,int enemy_health,string enemy_name){
         if(enemy_health<=0){return("You have defeated "+enemy_name+"! \n");}
@@ -366,7 +378,7 @@ namespace desktop{
         print("Health: "+std::to_string(player.stats.health)+" \n");
         print(get_lore(player)+"\n");
         print("You are now ready to embark on your journey. Good luck, and may the forces of magic be with you! \n");
-        enemy bob{"bob",{10,10,10,100},{},{},{},{},{}};
+        enemy bob{"bob",{10,10,10,100},0,{},{},{},{},{}};
         std::uniform_int_distribution<size_t> basic_dist(0,basic_powers.size()-1);
         bob.powers.basic=basic_powers[basic_dist(gen)];
         std::uniform_int_distribution<size_t> alignment_dist(0,alignments.size()-1);
@@ -390,18 +402,6 @@ namespace desktop{
         }
         bool win=false;
         while(!win){
-            bool turn=true;
-            print("You have encountered "+bob.name+"! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n");
-            while(player.stats.health>0&&bob.stats.health>0){
-                turn=battle_loop(turn,player,bob);
-                print(hp_print(player.stats.health,bob.stats.health,bob.name));
-            }
-            if(player.stats.health>0){print("Congratulations! You have won the battle! \n");win=true;}
-            else{print("You have lost the battle. ");}
-            player.stats.health=100;
-            bob.stats.health=100;
-            player.cooldown_times.clear();
-            bob.cooldown_times.clear();
             if(input("Would you like to check out the pets?",{"y/n"})=="yes"){
                 // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
                 // 50% rare pet, 30% uncommon, 20% common
@@ -439,6 +439,17 @@ namespace desktop{
                     print("You decided not to add any pets to your collection. \n");
                 }
             }
+            print("You have encountered "+bob.name+"! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n");
+            while(player.stats.health>0&&bob.stats.health>0){
+                battle_loop(player,bob);
+                print(hp_print(player.stats.health,bob.stats.health,bob.name));
+            }
+            if(player.stats.health>0){print("Congratulations! You have won the battle! \n");win=true;}
+            else{print("You have lost the battle. ");}
+            player.stats.health=100;
+            bob.stats.health=100;
+            player.cooldown_times.clear();
+            bob.cooldown_times.clear();
         }
     }
 }
