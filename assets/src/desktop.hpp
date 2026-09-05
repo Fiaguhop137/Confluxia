@@ -254,7 +254,7 @@ namespace desktop{
         return(static_cast<int>(std::round(static_cast<double>(moves.at(attacking_move).damage)*static_cast<double>(attacker_stats.attack)/static_cast<double>(attackee_stats.defense)*static_cast<double>(damage_multipliernum)/static_cast<double>(damage_multiplierden))));
     }
     void battle_loop(player& player,enemy& enemy){
-        int bar=std::max(player.stats.speed,enemy.stats.speed);
+        int bar=std::max(player.stats.speed,enemy.stats.speed)+1;
         bool turn;
         vector<string> available_moves;
         player.bar+=player.stats.speed;
