@@ -444,6 +444,8 @@ namespace desktop{
                 }else{
                     print("You decided not to add any pets to your collection. \n");
                 }
+            }else{
+                print("You decided not to add any pets to your collection. \n");
             }
             print("You have encountered "+bob.name+"! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n");
             while(player.stats.health>0&&bob.stats.health>0){
