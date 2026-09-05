@@ -67,7 +67,7 @@ namespace desktop{
     void print(string text){
         for(size_t i=0,len=text.size();i<len;++i){
             cout<<text[i]<<std::flush;
-            std::this_thread::sleep_for(std::chrono::milliseconds(30));
+            std::this_thread::sleep_for(std::chrono::milliseconds(3)); //for testing, changed to 3ms. change back to 30 when done
         }
     }
     string input(string prompt,vector<string>valid_options={}){
