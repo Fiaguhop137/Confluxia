@@ -278,6 +278,7 @@ namespace desktop{
             }
         }
         if(turn){
+            player.bar-=bar;
             string action="see moves";
             while(action=="see moves"){
                 action=input(string("What would you like to do?"),{"use move", "see moves"});
@@ -325,6 +326,7 @@ namespace desktop{
                 else{it++;}
             }
         }else{
+            enemy.bar-=bar;
             for(size_t i=0;i<enemy.known_moves.size();++i){if(enemy.cooldown_times.find(enemy.known_moves[i])==enemy.cooldown_times.end()){available_moves.push_back(enemy.known_moves[i]);}}
             string best_move;
             if(!available_moves.empty()){
