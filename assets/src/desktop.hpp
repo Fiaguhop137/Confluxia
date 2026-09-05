@@ -22,6 +22,7 @@ using std::unordered_map;
 namespace desktop{
     std::random_device rd;
     std::mt19937 gen(rd());
+    std::bernoulli_distribution randbool(0.5);
     const vector<string> basic_powers={"fire","metal","wood","earth","water"};
     const vector<string> alignments={"light","dark"};
     const vector<string> cosmic_powers={"space","time"};
@@ -270,7 +271,11 @@ namespace desktop{
         }else{
             if(player.bar>=bar){turn=true;}
             else if(enemy.bar>=bar){turn=false;}
-            else{turn=player.stats.speed>=enemy.stats.speed;}
+            else{
+                if(player.stats.speed>enemy.stats.speed){turn=true;}
+                else if(player.stats.speed<enemy.stats.speed){turn=false;}
+                else{turn=randbool(gen);}
+            }
         }
         if(turn){
             string action="see moves";
@@ -385,7 +390,6 @@ namespace desktop{
         bob.powers.alignment=alignments[alignment_dist(gen)];
         std::uniform_int_distribution<size_t> cosmic_dist(0,cosmic_powers.size()-1);
         bob.powers.cosmic=cosmic_powers[cosmic_dist(gen)];
-        std::bernoulli_distribution randbool(0.5);
         for(const auto& [id,val]:moves){
             if(val.type==bob.powers.basic||val.type==bob.powers.alignment||val.type==bob.powers.cosmic){
                 if(randbool(gen)){
