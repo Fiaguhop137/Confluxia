@@ -400,6 +400,36 @@ namespace desktop{
                 // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
                 // 50% rare pet, 30% uncommon, 20% common
                 print("You come across a few pets on your journey. \n");
+                // i dont wanna do the randomness rn so heres a hardcoded example of a pet encounter
+                pet flickerkit=pets.at("flickerkit");
+                pet shadelet=pets.at("shadelet");
+                pet riftling=pets.at("riftling");
+                print("You encounter 3 pets: \n");
+                print("1. A "+flickerkit.rarity+" "+flickerkit.type+" pet named "+flickerkit.name+"! It has the following stats: \n");
+                print("Stat: "+std::to_string(flickerkit.buffed_stat)+"\n");
+                print("Move: "+flickerkit.move+"\n");
+                print("Description: "+flickerkit.description+"\n");
+                print("2. A "+shadelet.rarity+" "+shadelet.type+" pet named "+shadelet.name+"! It has the following stats: \n");
+                print("Stat: "+std::to_string(shadelet.buffed_stat)+"\n");
+                print("Move: "+shadelet.move+"\n");
+                print("Description: "+shadelet.description+"\n");
+                print("3. A "+riftling.rarity+" "+riftling.type+" pet named "+riftling.name+"! It has the following stats: \n");
+                print("Stat: "+std::to_string(riftling.buffed_stat)+"\n");
+                print("Move: "+riftling.move+"\n");
+                print("Description: "+riftling.description+"\n");
+                const string choice=input("Which pet would you like to add to your collection?",{"flickerkit","shadelet","riftling","none"});
+                if(choice=="flickerkit"){
+                    player.pets.push_back("flickerkit");
+                    print(flickerkit.name+" has been added to your collection! \n");
+                }else if(choice=="shadelet"){
+                    player.pets.push_back("shadelet");
+                    print(shadelet.name+" has been added to your collection! \n");
+                }else if(choice=="riftling"){
+                    player.pets.push_back("riftling");
+                    print(riftling.name+" has been added to your collection! \n");
+                }else{
+                    print("You decided not to add any pets to your collection. \n");
+                }
             }
         }
     }
