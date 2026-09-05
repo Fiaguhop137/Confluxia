@@ -405,23 +405,22 @@ namespace desktop{
             if(input("Would you like to check out the pets?",{"y/n"})=="yes"){
                 // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
                 // 50% rare pet, 30% uncommon, 20% common
-                print("You come across a few pets on your journey. \n");
                 // i dont wanna do the randomness rn so heres a hardcoded example of a pet encounter
                 pet flickerkit=pets.at("flickerkit");
                 pet shadelet=pets.at("shadelet");
                 pet riftling=pets.at("riftling");
-                print("You encounter 3 pets: \n");
+                print("You come across a few pets on your journey. \n");
                 print("A "+flickerkit.rarity+" "+flickerkit.type+" pet named "+flickerkit.name+"! It has the following stats: \n");
                 print("Stat: "+flickerkit.buffed_stat+"\n");
-                print("Move: "+flickerkit.move+"\n");
+                print("Move: "+moves.at(flickerkit.move).name+"\n");
                 print("Description: "+flickerkit.description+"\n");
                 print("A "+shadelet.rarity+" "+shadelet.type+" pet named "+shadelet.name+"! It has the following stats: \n");
                 print("Stat: "+shadelet.buffed_stat+"\n");
-                print("Move: "+shadelet.move+"\n");
+                print("Move: "+moves.at(shadelet.move).name+"\n");
                 print("Description: "+shadelet.description+"\n");
                 print("A "+riftling.rarity+" "+riftling.type+" pet named "+riftling.name+"! It has the following stats: \n");
                 print("Stat: "+riftling.buffed_stat+"\n");
-                print("Move: "+riftling.move+"\n");
+                print("Move: "+moves.at(riftling.move).name+"\n");
                 print("Description: "+riftling.description+"\n");
                 const string choice=input("Which pet would you like to add to your collection?",{"flickerkit","shadelet","riftling","none"});
                 if(choice=="flickerkit"){
