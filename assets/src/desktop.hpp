@@ -36,7 +36,7 @@ namespace desktop{
         string name;
         string type;
         string rarity;
-        int buffed_stat;
+        string buffed_stat;
         string move;
         string description;
     };
@@ -47,7 +47,7 @@ namespace desktop{
     }
     unordered_map<string,pet> load_pets() {
         unordered_map<string,pet> result;
-        for(const auto& data:confluxed_assets::pets){result.emplace(string(data.id),pet{string(data.name),string(data.type),string(data.rarity),data.buffed_stat,string(data.move),string(data.description)});}
+        for(const auto& data:confluxed_assets::pets){result.emplace(string(data.id),pet{string(data.name),string(data.type),string(data.rarity),string(data.buffed_stat),string(data.move),string(data.description)});}
         return(result);
     }
     unordered_map<string,string> load_lore() {
@@ -350,6 +350,12 @@ namespace desktop{
             }
         }
     }
+    void stat_change(stat_block& stats,string stat,int change){
+        if(stat=="speed"){stats.speed+=change;}
+        else if(stat=="attack"){stats.attack+=change;}
+        else if(stat=="defense"){stats.defense+=change;}
+        else if(stat=="health"){stats.health+=change;}
+    }
     void run(){
         print("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
         player player;
@@ -405,27 +411,30 @@ namespace desktop{
                 pet shadelet=pets.at("shadelet");
                 pet riftling=pets.at("riftling");
                 print("You encounter 3 pets: \n");
-                print("1. A "+flickerkit.rarity+" "+flickerkit.type+" pet named "+flickerkit.name+"! It has the following stats: \n");
-                print("Stat: "+std::to_string(flickerkit.buffed_stat)+"\n");
+                print("A "+flickerkit.rarity+" "+flickerkit.type+" pet named "+flickerkit.name+"! It has the following stats: \n");
+                print("Stat: "+flickerkit.buffed_stat+"\n");
                 print("Move: "+flickerkit.move+"\n");
                 print("Description: "+flickerkit.description+"\n");
-                print("2. A "+shadelet.rarity+" "+shadelet.type+" pet named "+shadelet.name+"! It has the following stats: \n");
-                print("Stat: "+std::to_string(shadelet.buffed_stat)+"\n");
+                print("A "+shadelet.rarity+" "+shadelet.type+" pet named "+shadelet.name+"! It has the following stats: \n");
+                print("Stat: "+shadelet.buffed_stat+"\n");
                 print("Move: "+shadelet.move+"\n");
                 print("Description: "+shadelet.description+"\n");
-                print("3. A "+riftling.rarity+" "+riftling.type+" pet named "+riftling.name+"! It has the following stats: \n");
-                print("Stat: "+std::to_string(riftling.buffed_stat)+"\n");
+                print("A "+riftling.rarity+" "+riftling.type+" pet named "+riftling.name+"! It has the following stats: \n");
+                print("Stat: "+riftling.buffed_stat+"\n");
                 print("Move: "+riftling.move+"\n");
                 print("Description: "+riftling.description+"\n");
                 const string choice=input("Which pet would you like to add to your collection?",{"flickerkit","shadelet","riftling","none"});
                 if(choice=="flickerkit"){
                     player.pets.push_back("flickerkit");
+                    stat_change(player.stats,flickerkit.buffed_stat,10);
                     print(flickerkit.name+" has been added to your collection! \n");
                 }else if(choice=="shadelet"){
                     player.pets.push_back("shadelet");
+                    stat_change(player.stats,shadelet.buffed_stat,10);
                     print(shadelet.name+" has been added to your collection! \n");
                 }else if(choice=="riftling"){
                     player.pets.push_back("riftling");
+                    stat_change(player.stats,riftling.buffed_stat,10);
                     print(riftling.name+" has been added to your collection! \n");
                 }else{
                     print("You decided not to add any pets to your collection. \n");
