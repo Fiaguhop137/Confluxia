@@ -34,6 +34,7 @@ namespace desktop{
         string level;
     };
     struct pet{
+        string id;
         string name;
         string type;
         string rarity;
@@ -412,35 +413,35 @@ namespace desktop{
                 // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
                 // 50% rare pet, 30% uncommon, 20% common
                 // i dont wanna do the randomness rn so heres a hardcoded example of a pet encounter
-                pet flickerkit=pets.at("flickerkit");
-                pet shadelet=pets.at("shadelet");
-                pet riftling=pets.at("riftling");
+                pet option_1=pets.at("flickerkit");
+                pet option_2=pets.at("shadelet");
+                pet option_3=pets.at("riftling");
                 print("You come across a few pets on your journey. \n");
-                print("A "+flickerkit.rarity+" "+flickerkit.type+" pet named "+flickerkit.name+"! It has the following stats: \n");
-                print("Stat: "+flickerkit.buffed_stat+"\n");
-                print("Move: "+moves.at(flickerkit.move).name+"\n");
-                print("Description: "+flickerkit.description+"\n");
-                print("A "+shadelet.rarity+" "+shadelet.type+" pet named "+shadelet.name+"! It has the following stats: \n");
-                print("Stat: "+shadelet.buffed_stat+"\n");
-                print("Move: "+moves.at(shadelet.move).name+"\n");
-                print("Description: "+shadelet.description+"\n");
-                print("A "+riftling.rarity+" "+riftling.type+" pet named "+riftling.name+"! It has the following stats: \n");
-                print("Stat: "+riftling.buffed_stat+"\n");
-                print("Move: "+moves.at(riftling.move).name+"\n");
-                print("Description: "+riftling.description+"\n");
-                const string choice=input("Which pet would you like to add to your collection?",{"flickerkit","shadelet","riftling","none"});
-                if(choice=="flickerkit"){
-                    player.pets.push_back("flickerkit");
-                    stat_change(player.stats,flickerkit.buffed_stat,10);
-                    print(flickerkit.name+" has been added to your collection! \n");
-                }else if(choice=="shadelet"){
-                    player.pets.push_back("shadelet");
-                    stat_change(player.stats,shadelet.buffed_stat,10);
-                    print(shadelet.name+" has been added to your collection! \n");
-                }else if(choice=="riftling"){
-                    player.pets.push_back("riftling");
-                    stat_change(player.stats,riftling.buffed_stat,10);
-                    print(riftling.name+" has been added to your collection! \n");
+                print("A "+option_1.rarity+" "+option_1.type+" pet named "+option_1.name+"! It has the following stats: \n");
+                print("Stat: "+option_1.buffed_stat+"\n");
+                print("Move: "+moves.at(option_1.move).name+"\n");
+                print("Description: "+option_1.description+"\n");
+                print("A "+option_2.rarity+" "+option_2.type+" pet named "+option_2.name+"! It has the following stats: \n");
+                print("Stat: "+option_2.buffed_stat+"\n");
+                print("Move: "+moves.at(option_2.move).name+"\n");
+                print("Description: "+option_2.description+"\n");
+                print("A "+option_3.rarity+" "+option_3.type+" pet named "+option_3.name+"! It has the following stats: \n");
+                print("Stat: "+option_3.buffed_stat+"\n");
+                print("Move: "+moves.at(option_3.move).name+"\n");
+                print("Description: "+option_3.description+"\n");
+                const string choice=input("Which pet would you like to add to your collection?",{option_1.name,option_2.name,option_3.name,"none"});
+                if(choice==option_1.name){
+                    player.pets.push_back(option_1.id);
+                    stat_change(player.stats,option_1.buffed_stat,10);
+                    print(option_1.name+" has been added to your collection! \n");
+                }else if(choice==option_2.name){
+                    player.pets.push_back(option_2.id);
+                    stat_change(player.stats,option_2.buffed_stat,10);
+                    print(option_2.name+" has been added to your collection! \n");
+                }else if(choice==option_3.name){
+                    player.pets.push_back(option_3.id);
+                    stat_change(player.stats,option_3.buffed_stat,10);
+                    print(option_3.name+" has been added to your collection! \n");
                 }else{
                     print("You decided not to add any pets to your collection. \n");
                 }
