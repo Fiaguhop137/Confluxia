@@ -409,9 +409,9 @@ namespace desktop{
         bool win=false;
         while(!win){
             if(input("Would you like to check out the pets?",{"y/n"})=="yes"){
-                // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
                 // 50% rare pet, 30% uncommon, 20% common
                 //randomness time
+                std::bernoulli_distribution same_type(0.9);
                 vector<string> option_1_options;
                 vector<string> option_2_options;
                 vector<string> option_3_options;
@@ -428,30 +428,27 @@ namespace desktop{
                 pet option_2=pets.at(option_2_id);
                 pet option_3=pets.at(option_3_id);
                 print("You come across a few pets on your journey. \n");
-                print("A "+option_1.rarity+" "+option_1.type+" pet named "+option_1.name+"! It has the following stats: \n");
-                print("Stat: "+option_1.buffed_stat+"\n");
+                print("A "+option_1.rarity+" "+option_1.type+" "+option_1.description+" named "+option_1.name+"! It has the following stats: \n");
                 print("Move: "+moves.at(option_1.move).name+"\n");
-                print("Description: "+option_1.description+"\n");
-                print("A "+option_2.rarity+" "+option_2.type+" pet named "+option_2.name+"! It has the following stats: \n");
-                print("Stat: "+option_2.buffed_stat+"\n");
+                print("A "+option_2.rarity+" "+option_2.type+" "+option_2.description+" named "+option_2.name+"! It has the following stats: \n");
                 print("Move: "+moves.at(option_2.move).name+"\n");
-                print("Description: "+option_2.description+"\n");
-                print("A "+option_3.rarity+" "+option_3.type+" pet named "+option_3.name+"! It has the following stats: \n");
-                print("Stat: "+option_3.buffed_stat+"\n");
+                print("A "+option_3.rarity+" "+option_3.type+" "+option_3.description+" named "+option_3.name+"! It has the following stats: \n");
                 print("Move: "+moves.at(option_3.move).name+"\n");
-                print("Description: "+option_3.description+"\n");
                 const string choice=input("Which pet would you like to add to your collection?",{option_1.name,option_2.name,option_3.name,"none"});
                 if(choice==option_1.name){
                     player.pets.push_back(option_1_id);
                     stat_change(player.stats,option_1.buffed_stat,10);
+                    player.known_moves.push_back(option_1.move);
                     print(option_1.name+" has been added to your collection! \n");
                 }else if(choice==option_2.name){
                     player.pets.push_back(option_2_id);
                     stat_change(player.stats,option_2.buffed_stat,10);
+                    player.known_moves.push_back(option_2.move);
                     print(option_2.name+" has been added to your collection! \n");
                 }else if(choice==option_3.name){
                     player.pets.push_back(option_3_id);
                     stat_change(player.stats,option_3.buffed_stat,10);
+                    player.known_moves.push_back(option_3.move);
                     print(option_3.name+" has been added to your collection! \n");
                 }else{
                     print("You decided not to add any pets to your collection. \n");
