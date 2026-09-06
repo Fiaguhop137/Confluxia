@@ -34,7 +34,6 @@ namespace desktop{
         string level;
     };
     struct pet{
-        string id;
         string name;
         string type;
         string rarity;
@@ -412,10 +411,22 @@ namespace desktop{
             if(input("Would you like to check out the pets?",{"y/n"})=="yes"){
                 // list a few random pets. 90% chance its one of your types and 10% chance its a random type(learn a move from that type!)
                 // 50% rare pet, 30% uncommon, 20% common
-                // i dont wanna do the randomness rn so heres a hardcoded example of a pet encounter
-                pet option_1=pets.at("flickerkit");
-                pet option_2=pets.at("shadelet");
-                pet option_3=pets.at("riftling");
+                //randomness time
+                vector<string> option_1_options;
+                vector<string> option_2_options;
+                vector<string> option_3_options;
+                for (const auto& pet:pets){if(pet.second.type==player.powers.basic){option_1_options.push_back(pet.first);}}
+                for (const auto& pet:pets){if(pet.second.type==player.powers.alignment){option_2_options.push_back(pet.first);}}
+                for (const auto& pet:pets){if(pet.second.type==player.powers.cosmic){option_3_options.push_back(pet.first);}}
+                std::uniform_int_distribution<size_t> option_1_dist(0,option_1_options.size()-1);
+                string option_1_id=option_1_options[option_1_dist(gen)];
+                std::uniform_int_distribution<size_t> option_2_dist(0,option_2_options.size()-1);
+                string option_2_id=option_2_options[option_2_dist(gen)];
+                std::uniform_int_distribution<size_t> option_3_dist(0,option_3_options.size()-1);
+                string option_3_id=option_3_options[option_3_dist(gen)];
+                pet option_1=pets.at(option_1_id);
+                pet option_2=pets.at(option_2_id);
+                pet option_3=pets.at(option_3_id);
                 print("You come across a few pets on your journey. \n");
                 print("A "+option_1.rarity+" "+option_1.type+" pet named "+option_1.name+"! It has the following stats: \n");
                 print("Stat: "+option_1.buffed_stat+"\n");
@@ -431,15 +442,15 @@ namespace desktop{
                 print("Description: "+option_3.description+"\n");
                 const string choice=input("Which pet would you like to add to your collection?",{option_1.name,option_2.name,option_3.name,"none"});
                 if(choice==option_1.name){
-                    player.pets.push_back(option_1.id);
+                    player.pets.push_back(option_1_id);
                     stat_change(player.stats,option_1.buffed_stat,10);
                     print(option_1.name+" has been added to your collection! \n");
                 }else if(choice==option_2.name){
-                    player.pets.push_back(option_2.id);
+                    player.pets.push_back(option_2_id);
                     stat_change(player.stats,option_2.buffed_stat,10);
                     print(option_2.name+" has been added to your collection! \n");
                 }else if(choice==option_3.name){
-                    player.pets.push_back(option_3.id);
+                    player.pets.push_back(option_3_id);
                     stat_change(player.stats,option_3.buffed_stat,10);
                     print(option_3.name+" has been added to your collection! \n");
                 }else{
