@@ -428,12 +428,9 @@ namespace desktop{
                 pet option_2=pets.at(option_2_id);
                 pet option_3=pets.at(option_3_id);
                 print("You come across a few pets on your journey. \n");
-                print("A "+option_1.rarity+" "+option_1.type+" "+option_1.description+" named "+option_1.name+"! It has the following stats: \n");
-                print("Move: "+moves.at(option_1.move).name+"\n");
-                print("A "+option_2.rarity+" "+option_2.type+" "+option_2.description+" named "+option_2.name+"! It has the following stats: \n");
-                print("Move: "+moves.at(option_2.move).name+"\n");
-                print("A "+option_3.rarity+" "+option_3.type+" "+option_3.description+" named "+option_3.name+"! It has the following stats: \n");
-                print("Move: "+moves.at(option_3.move).name+"\n");
+                print("A "+option_1.rarity+" "+option_1.type+" "+option_1.description+" "+option_1.name+" has the move "+moves.at(option_1.move).name+"\n");
+                print("A "+option_2.rarity+" "+option_2.type+" "+option_2.description+" "+option_2.name+" has the move "+moves.at(option_2.move).name+"\n");
+                print("A "+option_3.rarity+" "+option_3.type+" "+option_3.description+" "+option_3.name+" has the move "+moves.at(option_3.move).name+"\n");
                 const string choice=input("Which pet would you like to add to your collection?",{option_1.name,option_2.name,option_3.name,"none"});
                 if(choice==option_1.name){
                     player.pets.push_back(option_1_id);
