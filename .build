@@ -2,7 +2,8 @@
 set -e
 bar=("⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷")
 start=$(date +%s.%N)
-cosmoc++ -std=c++23 -O0 -g ./assets/src/main.cpp -o ./.tmp &
+g++ -std=c++23 -O0 -g ./assets/src/main.cpp -o ./.tmp &
+#cosmoc++ -std=c++23 -O3 -g ./assets/src/main.cpp -o ./.tmp &
 pid=$!
 while kill -0 "$pid" 2>/dev/null; do
     for i in {0..7}; do
