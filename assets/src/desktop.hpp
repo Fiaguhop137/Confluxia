@@ -374,7 +374,8 @@ namespace desktop{
         if(stat=="speed"){stats.speed+=change;}
         else if(stat=="attack"){stats.attack+=change;}
         else if(stat=="defense"){stats.defense+=change;}
-        else if(stat=="health"){stats.max_health+=change;}
+        else if(stat=="health"){stats.max_health+=change;stats.health=stats.max_health;}
+        else{throw(std::invalid_argument("No stat found"));}
     }
     void run(){
         print("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
@@ -383,10 +384,10 @@ namespace desktop{
         print("Attack: "+std::to_string(player.stats.attack)+" \n");
         print("Speed: "+std::to_string(player.stats.speed)+" \n");
         print("Defense: "+std::to_string(player.stats.defense)+" \n");
-        print("Health: "+std::to_string(player.stats.health)+" \n");
+        print("Max Health: "+std::to_string(player.stats.max_health)+" \n");
         print(get_lore(player)+"\n");
         print("You are now ready to embark on your journey. Good luck, and may the forces of magic be with you! \n");
-        enemy bob{"bob",{10,10,10,100},0,{},{},{},{},{}};
+        enemy bob{"bob",{10,10,10,100,100},0,{},{},{},{},{}};
         std::uniform_int_distribution<size_t> basic_dist(0,basic_powers.size()-1);
         bob.powers.basic=basic_powers[basic_dist(gen)];
         std::uniform_int_distribution<size_t> alignment_dist(0,alignments.size()-1);
