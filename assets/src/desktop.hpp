@@ -126,6 +126,7 @@ namespace desktop{
         int attack;
         int defense;
         int health;
+        int max_health;
     };
     struct power_construct{
         string basic;
@@ -148,7 +149,7 @@ namespace desktop{
         unordered_map<string,int>cooldown_times={};
         vector<string> known_moves;
         vector<string> pets;
-        stat_block stats{10,10,10,100};
+        stat_block stats{10,10,10,100,100};
         int bar=0;
         power_construct powers;
         player(){
@@ -373,7 +374,7 @@ namespace desktop{
         if(stat=="speed"){stats.speed+=change;}
         else if(stat=="attack"){stats.attack+=change;}
         else if(stat=="defense"){stats.defense+=change;}
-        else if(stat=="health"){stats.health+=change;}
+        else if(stat=="health"){stats.max_health+=change;}
     }
     void run(){
         print("Welcome to the game! You are a player in a world of magic and adventure. You will be able to choose your character's stats and powers, and then embark on a journey to defeat the evil forces that threaten the land. \n");
@@ -460,8 +461,8 @@ namespace desktop{
             }
             if(player.stats.health>0){print("Congratulations! You have won the battle! \n");win=true;}
             else{print("You have lost the battle. ");}
-            player.stats.health=100;
-            bob.stats.health=100;
+            player.stats.health=player.stats.max_health;
+            bob.stats.health=bob.stats.max_health;
             player.cooldown_times.clear();
             bob.cooldown_times.clear();
         }
