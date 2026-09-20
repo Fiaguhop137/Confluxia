@@ -419,6 +419,10 @@ namespace desktop{
                 for(const auto& pet:pets){if((pet.second.type==player.powers.basic)||(player.powers.basic=="nexus"&&std::find(basic_powers.begin(),basic_powers.end(),pet.second.type)!=basic_powers.end())){option_1_options.push_back(pet.first);}}
                 for(const auto& pet:pets){if((pet.second.type==player.powers.alignment)||(player.powers.alignment=="objectivity"&&std::find(alignments.begin(),alignments.end(),pet.second.type)!=alignments.end())){option_2_options.push_back(pet.first);}}
                 for(const auto& pet:pets){if((pet.second.type==player.powers.cosmic)||(player.powers.cosmic=="axiom"&&std::find(cosmic_powers.begin(),cosmic_powers.end(),pet.second.type)!=cosmic_powers.end())){option_3_options.push_back(pet.first);}}
+                print("Pet options: "+
+    std::to_string(option_1_options.size())+" / "+
+    std::to_string(option_2_options.size())+" / "+
+    std::to_string(option_3_options.size())+"\n");
                 std::uniform_int_distribution<size_t> option_1_dist(0,option_1_options.size()-1);
                 string option_1_id=option_1_options[option_1_dist(gen)];
                 std::uniform_int_distribution<size_t> option_2_dist(0,option_2_options.size()-1);
