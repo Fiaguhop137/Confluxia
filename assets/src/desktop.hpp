@@ -414,7 +414,7 @@ namespace desktop{
         bool win=false;
         while(!win){
             if(input("Would you like to check out the pets?",{"y/n"})=="yes"){
-                std::bernoulli_distribution same_type(0.9);
+                std::bernoulli_distribution same_type(0.1);
                 const bool option_1_same_type=same_type(gen);
                 const bool option_2_same_type=same_type(gen);
                 const bool option_3_same_type=same_type(gen);
