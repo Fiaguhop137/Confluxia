@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <array>
 #include <algorithm>
 #include <cctype>
 #include <cmath>
@@ -19,13 +20,15 @@ using std::cout;
 using std::string;
 using std::vector;
 using std::unordered_map;
+using std::find;
 namespace desktop{
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::bernoulli_distribution randbool(0.5);
+    std::bernoulli_distribution coin_flip(0.5);
     const vector<string> basic_powers={"fire","metal","wood","earth","water"};
     const vector<string> alignments={"light","dark"};
     const vector<string> cosmic_powers={"space","time"};
+    const std::array<string,5> rarities={"common","uncommon","rare","epic","legendary"};
     struct move{
         string name;
         int damage;
@@ -275,7 +278,7 @@ namespace desktop{
             else{
                 if(player.stats.speed>enemy.stats.speed){turn=true;}
                 else if(player.stats.speed<enemy.stats.speed){turn=false;}
-                else{turn=randbool(gen);}
+                else{turn=coin_flip(gen);}
             }
         }
         if(turn){
@@ -396,7 +399,7 @@ namespace desktop{
         bob.powers.cosmic=cosmic_powers[cosmic_dist(gen)];
         for(const auto& [id,val]:moves){
             if(val.type==bob.powers.basic||val.type==bob.powers.alignment||val.type==bob.powers.cosmic){
-                if(randbool(gen)){
+                if(coin_flip(gen)){
                     bob.known_moves.push_back(id);
                 }
             }
@@ -411,23 +414,40 @@ namespace desktop{
         bool win=false;
         while(!win){
             if(input("Would you like to check out the pets?",{"y/n"})=="yes"){
-                // 50% rare pet, 30% uncommon, 20% common
                 std::bernoulli_distribution same_type(0.9);
+                bool option_1_same_type=same_type(gen);
+                bool option_2_same_type=same_type(gen);
+                bool option_3_same_type=same_type(gen);
                 vector<string> option_1_options;
                 vector<string> option_2_options;
                 vector<string> option_3_options;
-                for(const auto& pet:pets){if((pet.second.type==player.powers.basic)||(player.powers.basic=="nexus"&&std::find(basic_powers.begin(),basic_powers.end(),pet.second.type)!=basic_powers.end())){option_1_options.push_back(pet.first);}}
-                for(const auto& pet:pets){if((pet.second.type==player.powers.alignment)||(player.powers.alignment=="objectivity"&&std::find(alignments.begin(),alignments.end(),pet.second.type)!=alignments.end())){option_2_options.push_back(pet.first);}}
-                for(const auto& pet:pets){if((pet.second.type==player.powers.cosmic)||(player.powers.cosmic=="axiom"&&std::find(cosmic_powers.begin(),cosmic_powers.end(),pet.second.type)!=cosmic_powers.end())){option_3_options.push_back(pet.first);}}
-                print("Pet options: "+
-    std::to_string(option_1_options.size())+" / "+
-    std::to_string(option_2_options.size())+" / "+
-    std::to_string(option_3_options.size())+"\n");
+                for(const auto& pet:pets){
+                    if((pet.second.type==player.powers.basic)||((player.powers.basic=="nexus"||option_1_same_type)&&find(basic_powers.begin(),basic_powers.end(),pet.second.type)!=basic_powers.end())){
+                        for(size_t i=0;i<std::distance(find(rarities.begin(),rarities.end(),pet.second.rarity),rarities.end())+1;++i){
+                            option_1_options.push_back(pet.first);
+                        }
+                    }
+                }
+                for(const auto& pet:pets){
+                    if((pet.second.type==player.powers.alignment)||((player.powers.alignment=="objectivity"||option_2_same_type)&&find(alignments.begin(),alignments.end(),pet.second.type)!=alignments.end())){
+                        for(size_t i=0;i<std::distance(find(rarities.begin(),rarities.end(),pet.second.rarity),rarities.end())+1;++i){
+                            option_2_options.push_back(pet.first);
+                        }
+                    }
+                }
+                for(const auto& pet:pets){
+                    if((pet.second.type==player.powers.cosmic)||((player.powers.cosmic=="axiom"||option_3_same_type)&&find(cosmic_powers.begin(),cosmic_powers.end(),pet.second.type)!=cosmic_powers.end())){
+                        for(size_t i=0;i<std::distance(find(rarities.begin(),rarities.end(),pet.second.rarity),rarities.end())+1;++i){
+                            option_3_options.push_back(pet.first);
+                        }
+                    }
+                }
+                if(option_1_options.empty()||option_2_options.empty()||option_3_options.empty()){throw std::runtime_error("No valid pets found for one or more power types.");}
                 std::uniform_int_distribution<size_t> option_1_dist(0,option_1_options.size()-1);
-                string option_1_id=option_1_options[option_1_dist(gen)];
                 std::uniform_int_distribution<size_t> option_2_dist(0,option_2_options.size()-1);
-                string option_2_id=option_2_options[option_2_dist(gen)];
                 std::uniform_int_distribution<size_t> option_3_dist(0,option_3_options.size()-1);
+                string option_1_id=option_1_options[option_1_dist(gen)];
+                string option_2_id=option_2_options[option_2_dist(gen)];
                 string option_3_id=option_3_options[option_3_dist(gen)];
                 pet option_1=pets.at(option_1_id);
                 pet option_2=pets.at(option_2_id);
