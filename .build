@@ -1,6 +1,26 @@
 #!/bin/bash
 set -e
+bar=("⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷")
 start=$(date +%s.%N)
-clang++ -std=c++23 -O0 -g0 ./assets/src/main.cpp -o ./Confluxia
-printf '[Success] Compiled Confluxia in %ss! \n' "$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")"
-(nohup git sync > /dev/null 2>&1 &)
+g++ -std=c++23 -O0 -g ./assets/src/main.cpp -o ./.tmp &
+pid=$!
+while kill -0 "$pid" 2>/dev/null; do
+    for i in {0..7}; do
+        if ! kill -0 "$pid" 2>/dev/null; then
+            break
+        fi
+        printf '\r[%s] ['$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")'] Compiling Confluxia...' "${bar[$i]}"
+        sleep 0.125
+    done
+done
+if ! wait "$pid"; then
+    printf '[Error] Compilation failed. \n'
+    exit 1
+fi
+elapsed=$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")
+printf '\r\033[2K'
+printf '[Success] Compiled Confluxia in %ss! \n' "$elapsed"
+rm -f ./.tmp.aarch64.elf
+rm -f ./.tmp.com.dbg
+mv ./.tmp ./Confluxia.com
+nohup git sync > /dev/null 2>&1 &
