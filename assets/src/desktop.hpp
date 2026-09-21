@@ -360,7 +360,7 @@ namespace desktop{
                 else{it++;}
             }
         }
-        return{favor};
+        return favor;
     }
     string hp_print(int player_health,int enemy_health,string enemy_name){
         if(enemy_health<=0){return("You have defeated "+enemy_name+"! \n");}
