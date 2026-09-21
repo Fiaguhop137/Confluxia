@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 bar=("⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷")
+dots=("." "." "." ".." ".." ".." "..." "..." "...")
 start=$(date +%s.%N)
 clang++ -std=c++23 -O0 -g ./assets/src/main.cpp -o ./Confluxia &
 pid=$!
@@ -9,7 +10,7 @@ while kill -0 "$pid" 2>/dev/null; do
         if ! kill -0 "$pid" 2>/dev/null; then
             break
         fi
-        printf '\r[%s] ['$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")'] Compiling Confluxia...' "${bar[$i]}"
+        printf '\r[%s] ['$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")'] Compiling Confluxia%.*s' "${bar[$i]}" 3 "${dots[$((i % 3))]}"
         sleep 0.125
     done
 done
