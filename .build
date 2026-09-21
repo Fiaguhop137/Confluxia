@@ -2,8 +2,7 @@
 set -e
 bar=("⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷")
 start=$(date +%s.%N)
-g++ -std=c++23 -O0 -g ./assets/src/main.cpp -o ./.tmp &
-#cosmoc++ -std=c++23 -O3 -g ./assets/src/main.cpp -o ./.tmp &
+ccache g++ -std=c++23 -O0 -g0 -march=native ./assets/src/main.cpp -o ./Confluxia &
 pid=$!
 while kill -0 "$pid" 2>/dev/null; do
     for i in {0..7}; do
@@ -21,7 +20,4 @@ fi
 elapsed=$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")
 printf '\r\033[2K'
 printf '[Success] Compiled Confluxia in %ss! \n' "$elapsed"
-rm -f ./.tmp.aarch64.elf
-rm -f ./.tmp.com.dbg
-mv ./.tmp ./Confluxia.com
 nohup git sync > /dev/null 2>&1 &

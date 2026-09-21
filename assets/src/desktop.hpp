@@ -415,9 +415,9 @@ namespace desktop{
         while(!win){
             if(input("Would you like to check out the pets?",{"y/n"})=="yes"){
                 std::bernoulli_distribution same_type(0.9);
-                bool option_1_same_type=same_type(gen);
-                bool option_2_same_type=same_type(gen);
-                bool option_3_same_type=same_type(gen);
+                const bool option_1_same_type=same_type(gen);
+                const bool option_2_same_type=same_type(gen);
+                const bool option_3_same_type=same_type(gen);
                 vector<string> option_1_options;
                 vector<string> option_2_options;
                 vector<string> option_3_options;
@@ -446,9 +446,9 @@ namespace desktop{
                 std::uniform_int_distribution<size_t> option_1_dist(0,option_1_options.size()-1);
                 std::uniform_int_distribution<size_t> option_2_dist(0,option_2_options.size()-1);
                 std::uniform_int_distribution<size_t> option_3_dist(0,option_3_options.size()-1);
-                string option_1_id=option_1_options[option_1_dist(gen)];
-                string option_2_id=option_2_options[option_2_dist(gen)];
-                string option_3_id=option_3_options[option_3_dist(gen)];
+                const string option_1_id=option_1_options[option_1_dist(gen)];
+                const string option_2_id=option_2_options[option_2_dist(gen)];
+                const string option_3_id=option_3_options[option_3_dist(gen)];
                 pet option_1=pets.at(option_1_id);
                 pet option_2=pets.at(option_2_id);
                 pet option_3=pets.at(option_3_id);
