@@ -74,7 +74,7 @@ namespace desktop{
             std::this_thread::sleep_for(std::chrono::milliseconds(3)); //for testing, changed to 3ms. change back to 30 when done
         }
     }
-    string input(string prompt,vector<string>valid_options={}){
+    string input(string prompt,vector<string>valid_options={},bool options=true){
         vector<string> printed_options=valid_options;
         while(true){
             string response;
@@ -84,13 +84,15 @@ namespace desktop{
                 if(printed_options==vector<string>{"y/n"}){
                     valid_options={"yes","no","y","n"};
                 }
-                print("(");
-                for(size_t i=0;i<printed_options.size()-1;i++){
-                    print(printed_options[i]);
-                    if(i<printed_options.size()-2){print(", ");}
+                if(options){
+                    print("(");
+                    for(size_t i=0;i<printed_options.size()-1;i++){
+                        print(printed_options[i]);
+                        if(i<printed_options.size()-2){print(", ");}
+                    }
+                    if(printed_options.size()>1){print(" or ");}
+                    print(printed_options.back()+") ");
                 }
-                if(printed_options.size()>1){print(" or ");}
-                print(printed_options.back()+") ");
             }
             std::getline(cin,response);
             string response_lower=response;
@@ -284,47 +286,40 @@ namespace desktop{
         favor=!turn;
         if(turn){
             player.bar-=bar;
-            string action="see moves";
-            while(action=="see moves"){
-                action=input(string("What would you like to do?"),{"use move", "see moves"});
-                available_moves.clear();
-                for(size_t i=0;i<player.known_moves.size();++i){if(player.cooldown_times.find(player.known_moves[i])==player.cooldown_times.end()){available_moves.push_back(player.known_moves[i]);}}
-                if(action=="see moves"){
-                    print("You can use the following moves: \n");
-                    for(size_t i=0;i<available_moves.size();++i){
-                        string cooldown;
-                        if(moves.at(available_moves[i]).cooldown==1){cooldown="no";}
-                        else{cooldown=std::to_string(moves.at(available_moves[i]).cooldown-1)+"-turn";}
-                        print(moves.at(available_moves[i]).name+": "+std::to_string(moves.at(available_moves[i]).damage)+" damage, "+cooldown+" cooldown \n");
-                    }
-                }else{
-                    unordered_map<string,string> move_lookup;
-                    for(const auto& move_id:available_moves){move_lookup[moves.at(move_id).name]=move_id;}
-                    vector<string> available_move_names;
-                    for(const auto& pair:move_lookup){available_move_names.push_back(pair.first);}
-                    string move_to_use=input("What move would you like to use?",{available_move_names});
-                    string move_to_use_id=move_lookup[move_to_use];
-                    int damage=get_damage(true,player.cooldown_times,player.stats,enemy.stats,enemy.powers,move_to_use_id);
-                    enemy.stats.health-=damage;
-                    if(moves.at(move_to_use_id).level=="basic"){
-                        if(enemy.memory.basic!=moves.at(move_to_use_id).type&&enemy.memory.basic!="nexus"){
-                            if(enemy.memory.basic==""){enemy.memory.basic=moves.at(move_to_use_id).type;}
-                            else{enemy.memory.basic="nexus";}
-                        }
-                    }else if(moves.at(move_to_use_id).level=="alignment"){
-                        if(enemy.memory.alignment!=moves.at(move_to_use_id).type&&enemy.memory.alignment!="objectivity"){
-                            if(enemy.memory.alignment==""){enemy.memory.alignment=moves.at(move_to_use_id).type;}
-                            else{enemy.memory.alignment="objectivity";}
-                        }
-                    }else if(moves.at(move_to_use_id).level=="cosmic"){
-                        if(enemy.memory.cosmic!=moves.at(move_to_use_id).type&&enemy.memory.cosmic!="axiom"){
-                            if(enemy.memory.cosmic==""){enemy.memory.cosmic=moves.at(move_to_use_id).type;}
-                            else{enemy.memory.cosmic="axiom";}
-                        }
-                    }
-                    print("You used "+moves.at(move_to_use_id).name+" and dealt "+std::to_string(damage)+" damage to "+enemy.name+"! \n");
+            available_moves.clear();
+            for(size_t i=0;i<player.known_moves.size();++i){if(player.cooldown_times.find(player.known_moves[i])==player.cooldown_times.end()){available_moves.push_back(player.known_moves[i]);}}
+            print("You can use the following moves: \n");
+            for(size_t i=0;i<available_moves.size();++i){
+                string cooldown;
+                if(moves.at(available_moves[i]).cooldown==1){cooldown="no";}
+                else{cooldown=std::to_string(moves.at(available_moves[i]).cooldown-1)+"-turn";}
+                print(moves.at(available_moves[i]).name+": "+std::to_string(moves.at(available_moves[i]).damage)+" damage, "+cooldown+" cooldown \n");
+            }
+            unordered_map<string,string> move_lookup;
+            for(const auto& move_id:available_moves){move_lookup[moves.at(move_id).name]=move_id;}
+            vector<string> available_move_names;
+            for(const auto& pair:move_lookup){available_move_names.push_back(pair.first);}
+            string move_to_use=input("What move would you like to use?",{available_move_names},false);
+            string move_to_use_id=move_lookup[move_to_use];
+            int damage=get_damage(true,player.cooldown_times,player.stats,enemy.stats,enemy.powers,move_to_use_id);
+            enemy.stats.health-=damage;
+            if(moves.at(move_to_use_id).level=="basic"){
+                if(enemy.memory.basic!=moves.at(move_to_use_id).type&&enemy.memory.basic!="nexus"){
+                    if(enemy.memory.basic==""){enemy.memory.basic=moves.at(move_to_use_id).type;}
+                    else{enemy.memory.basic="nexus";}
+                }
+            }else if(moves.at(move_to_use_id).level=="alignment"){
+                if(enemy.memory.alignment!=moves.at(move_to_use_id).type&&enemy.memory.alignment!="objectivity"){
+                    if(enemy.memory.alignment==""){enemy.memory.alignment=moves.at(move_to_use_id).type;}
+                    else{enemy.memory.alignment="objectivity";}
+                }
+            }else if(moves.at(move_to_use_id).level=="cosmic"){
+                if(enemy.memory.cosmic!=moves.at(move_to_use_id).type&&enemy.memory.cosmic!="axiom"){
+                    if(enemy.memory.cosmic==""){enemy.memory.cosmic=moves.at(move_to_use_id).type;}
+                    else{enemy.memory.cosmic="axiom";}
                 }
             }
+            print("You used "+moves.at(move_to_use_id).name+" and dealt "+std::to_string(damage)+" damage to "+enemy.name+"! \n");
             for(auto it=player.cooldown_times.begin();it!=player.cooldown_times.end();){
                 it->second--;
                 if(it->second<=0){it=player.cooldown_times.erase(it);}
