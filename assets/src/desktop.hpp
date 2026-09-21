@@ -257,7 +257,7 @@ namespace desktop{
         if(apply_cooldown){attacker_cooldown_times[attacking_move]=moves.at(attacking_move).cooldown;}
         return(static_cast<int>(std::round(static_cast<double>(moves.at(attacking_move).damage)*static_cast<double>(attacker_stats.attack)/static_cast<double>(attackee_stats.defense)*static_cast<double>(damage_multipliernum)/static_cast<double>(damage_multiplierden))));
     }
-    void battle_loop(player& player,enemy& enemy){
+    bool battle_loop(player& player,enemy& enemy,bool favor){
         int bar=std::max(player.stats.speed,enemy.stats.speed)+1;
         bool turn;
         vector<string> available_moves;
@@ -278,9 +278,10 @@ namespace desktop{
             else{
                 if(player.stats.speed>enemy.stats.speed){turn=true;}
                 else if(player.stats.speed<enemy.stats.speed){turn=false;}
-                else{turn=coin_flip(gen);}
+                else{turn=favor;}
             }
         }
+        favor=!turn;
         if(turn){
             player.bar-=bar;
             string action="see moves";
@@ -359,6 +360,7 @@ namespace desktop{
                 else{it++;}
             }
         }
+        return{favor};
     }
     string hp_print(int player_health,int enemy_health,string enemy_name){
         if(enemy_health<=0){return("You have defeated "+enemy_name+"! \n");}
@@ -479,8 +481,9 @@ namespace desktop{
                 print("You decided not to add any pets to your collection. \n");
             }
             print("You have encountered "+bob.name+"! Prepare for battle!\nYou have "+std::to_string(player.stats.speed)+" SPD, "+std::to_string(player.stats.attack)+" ATK, "+std::to_string(player.stats.defense)+" DFN, "+std::to_string(player.stats.health)+" HLT\n");
+            bool favor=coin_flip(gen);
             while(player.stats.health>0&&bob.stats.health>0){
-                battle_loop(player,bob);
+                favor=battle_loop(player,bob,favor);
                 print(hp_print(player.stats.health,bob.stats.health,bob.name));
             }
             if(player.stats.health>0){print("Congratulations! You have won the battle! \n");win=true;}
