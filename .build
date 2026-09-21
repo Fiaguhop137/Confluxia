@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
-bar=("⣾" "⣽" "⣻" "⢿" "⡿" "⣟" "⣯" "⣷")
 start=$(date +%s.%N)
-ccache g++ -std=c++23 -O0 -g0 ./assets/src/main.cpp -o ./Confluxia
+ccache clang++ -std=c++23 -O0 -g0 ./assets/src/main.cpp -o ./Confluxia < /dev/null
 elapsed=$(awk "BEGIN {printf \"%.2f\", $(date +%s.%N) - $start}")
 printf '[Success] Compiled Confluxia in %ss! \n' "$elapsed"
-nohup git sync > /dev/null 2>&1 &
+(nohup git sync > /dev/null 2>&1 &)
