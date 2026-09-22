@@ -15,6 +15,7 @@
 #include "../data/modifiers.hpp"
 #include "../data/moves.hpp"
 #include "../data/pets.hpp"
+#include "../data/status_effects.hpp"
 using std::cin;
 using std::cout;
 using std::string;

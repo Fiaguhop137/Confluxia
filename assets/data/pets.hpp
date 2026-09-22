@@ -1,6 +1,5 @@
 #pragma once
 #include <string_view>
-#include <array>
 namespace confluxed_assets{
     struct pet_data{
         std::string_view id;
