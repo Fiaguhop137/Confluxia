@@ -20,8 +20,9 @@ std::uint64_t hash_file(const std::string& filename) {
     return hash;
 }
 int main(){
-    if(hash_file("LICENSE")==0xc3f09ce3a24fbeab){
+    if(hash_file("LICENSE")==0xcbf29ce484222325){
         //desktop::run();
+        std::cout<<"License verified. You can now run confluxia. \n";
     }else{
         std::cout<<"The license for this software is missing or has been modified. Please use the original license file to run confluxia. \n";
         std::cout<<std::to_string(hash_file("LICENSE"))<<" vs "<<std::to_string(0xc3f09ce3a24fbeab)<<"\n";
