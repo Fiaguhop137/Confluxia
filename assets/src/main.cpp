@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdint>
 #include <filesystem>
-#include "desktop.hpp"
+//#include "desktop.hpp"
 std::uint64_t hash_file(const std::string& filename) {
     std::uint64_t hash=0xcbf29ce484222325;
     constexpr std::uint64_t prime=0x100000001b3;
@@ -21,10 +21,10 @@ std::uint64_t hash_file(const std::string& filename) {
 }
 int main(){
     if(hash_file("LICENSE")==0xc3f09ce3a24fbeab){
-        desktop::run();
+        //desktop::run();
     }else{
         std::cout<<"The license for this software is missing or has been modified. Please use the original license file to run confluxia. \n";
-        std::cout<<std::to_string(hash_file("LICENSE"))<<" vs 0xc3f09ce3a24fbeab\n";
+        std::cout<<std::to_string(hash_file("LICENSE"))<<" vs "<<std::to_string(0xc3f09ce3a24fbeab)<<"\n";
         return 402;
     }
 }
