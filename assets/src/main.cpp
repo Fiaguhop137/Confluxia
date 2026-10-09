@@ -20,7 +20,7 @@ std::uint64_t hash_file(const std::string& filename) {
     return hash;
 }
 int main(){
-    if(hash_file("LICENSE")==0xc3f09ce3a24fbeab){
+    if(hash_file("LICENSE")==0xd0067171947ade2d){
         desktop::run();
     }else{
         std::cout<<"The license for this software is missing or has been modified. Please use the original license file to run confluxia. \n";
