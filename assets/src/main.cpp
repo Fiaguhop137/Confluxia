@@ -24,6 +24,7 @@ int main(){
         desktop::run();
     }else{
         std::cout<<"The license for this software is missing or has been modified. Please use the original license file to run confluxia. \n";
+        std::cout<<std::showbase<<std::uppercase<<hash_file("LICENSE");
         return 402;
     }
 }
